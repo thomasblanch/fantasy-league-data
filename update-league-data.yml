@@ -1,0 +1,56 @@
+name: Update Fantasy League Data
+
+# Runs on a schedule and can also be triggered manually from the
+# "Actions" tab in GitHub with the "Run workflow" button.
+on:
+  schedule:
+    # Every Monday at 13:00 UTC. Cron times are always UTC regardless
+    # of your timezone — adjust the hour to suit when your NBA fantasy
+    # week actually rolls over. Format: minute hour day month weekday.
+    # Examples:
+    #   '0 13 * * 1'   -> weekly, Monday 13:00 UTC
+    #   '0 12 * * *'   -> daily at 12:00 UTC
+    - cron: '0 13 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install espn_api
+        run: pip install espn_api
+
+      - name: Run export script
+        env:
+          LEAGUE_ID: ${{ secrets.ESPN_LEAGUE_ID }}
+          YEAR: ${{ secrets.ESPN_YEAR }}
+          SWID: ${{ secrets.ESPN_SWID }}
+          ESPN_S2: ${{ secrets.ESPN_S2 }}
+        run: |
+          python export_league_data.py \
+            --league-id "$LEAGUE_ID" \
+            --year "$YEAR" \
+            --swid "$SWID" \
+            --espn-s2 "$ESPN_S2" \
+            > league.json
+
+      - name: Commit updated data
+        run: |
+          git config user.name "league-data-bot"
+          git config user.email "actions@github.com"
+          git add league.json
+          # only commit if the file actually changed, so we don't spam
+          # the repo history with empty commits every week
+          git diff --quiet --cached || git commit -m "Update league data $(date -u +'%Y-%m-%d')"
+          git push
