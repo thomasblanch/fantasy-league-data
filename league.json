@@ -48,8 +48,8 @@
     },
     {
       "id": 3,
-      "name": "Team 3",
-      "manager": "Manager",
+      "name": "Temu Paolo",
+      "manager": "Paolo",
       "wins": 0,
       "losses": 0,
       "weekly": [
@@ -114,8 +114,8 @@
     },
     {
       "id": 6,
-      "name": "Team 6",
-      "manager": "Manager",
+      "name": "Heath's Imposing Team",
+      "manager": "Heath",
       "wins": 0,
       "losses": 0,
       "weekly": [
@@ -136,7 +136,7 @@
     },
     {
       "id": 7,
-      "name": "P Giddey",
+      "name": "Sweet Home Wembanyama",
       "manager": "Nathan",
       "wins": 0,
       "losses": 0,
