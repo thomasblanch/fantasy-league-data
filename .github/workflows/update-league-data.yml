@@ -31,6 +31,32 @@ jobs:
       - name: Install espn_api
         run: pip install espn_api
 
+      - name: Debug — check secrets are set correctly (no values printed)
+        env:
+          LEAGUE_ID: ${{ secrets.ESPN_LEAGUE_ID }}
+          YEAR: ${{ secrets.ESPN_YEAR }}
+          SWID: ${{ secrets.ESPN_SWID }}
+          ESPN_S2: ${{ secrets.ESPN_S2 }}
+        run: |
+          echo "LEAGUE_ID length: ${#LEAGUE_ID} (expect ~9-10 digits, just numbers)"
+          echo "YEAR length: ${#YEAR} (expect 4, e.g. 2026)"
+          echo "SWID length: ${#SWID} (expect ~38, including the { } braces)"
+          echo "ESPN_S2 length: ${#ESPN_S2} (expect 150-250+, a long encoded string)"
+          echo "SWID starts with a brace: $([ "${SWID:0:1}" = "{" ] && echo yes || echo NO — missing opening brace)"
+          echo "SWID ends with a brace: $([ "${SWID: -1}" = "}" ] && echo yes || echo NO — missing closing brace)"
+
+      - name: Test ESPN connection directly (bypasses the Python script)
+        env:
+          LEAGUE_ID: ${{ secrets.ESPN_LEAGUE_ID }}
+          YEAR: ${{ secrets.ESPN_YEAR }}
+          SWID: ${{ secrets.ESPN_SWID }}
+          ESPN_S2: ${{ secrets.ESPN_S2 }}
+        run: |
+          echo "HTTP status from ESPN (200 = success, 401/403 = bad cookies, 404 = bad league ID/year):"
+          curl -s -o /dev/null -w "%{http_code}\n" \
+            "https://fantasy.espn.com/apis/v3/games/fba/seasons/$YEAR/segments/0/leagues/$LEAGUE_ID?view=mSettings" \
+            -H "Cookie: swid=$SWID; espn_s2=$ESPN_S2"
+
       - name: Run export script
         env:
           LEAGUE_ID: ${{ secrets.ESPN_LEAGUE_ID }}
@@ -50,6 +76,11 @@ jobs:
           git config user.name "league-data-bot"
           git config user.email "actions@github.com"
           git add league.json
+          # only commit if the file actually changed, so we don't spam
+          # the repo history with empty commits every week
+          git diff --quiet --cached || git commit -m "Update league data $(date -u +'%Y-%m-%d')"
+          git push
+
           # only commit if the file actually changed, so we don't spam
           # the repo history with empty commits every week
           git diff --quiet --cached || git commit -m "Update league data $(date -u +'%Y-%m-%d')"
