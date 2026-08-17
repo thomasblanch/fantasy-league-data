@@ -1,0 +1,301 @@
+{
+  "leagueName": "The League of Ordinary Gentlemen",
+  "week": 1,
+  "teams": [
+    {
+      "id": 1,
+      "name": "Ball Gasol",
+      "manager": "Thomas",
+      "wins": 0,
+      "losses": 0,
+      "weekly": [
+        {
+          "PTS": 0,
+          "REB": 0,
+          "AST": 0,
+          "STL": 0,
+          "BLK": 0,
+          "3PM": 0,
+          "FG%": 0,
+          "FT%": 0,
+          "TO": 0,
+          "games": 0
+        }
+      ],
+      "players": []
+    },
+    {
+      "id": 2,
+      "name": "Team 2",
+      "manager": "Manager",
+      "wins": 0,
+      "losses": 0,
+      "weekly": [
+        {
+          "PTS": 0,
+          "REB": 0,
+          "AST": 0,
+          "STL": 0,
+          "BLK": 0,
+          "3PM": 0,
+          "FG%": 0,
+          "FT%": 0,
+          "TO": 0,
+          "games": 0
+        }
+      ],
+      "players": []
+    },
+    {
+      "id": 3,
+      "name": "Team 3",
+      "manager": "Manager",
+      "wins": 0,
+      "losses": 0,
+      "weekly": [
+        {
+          "PTS": 0,
+          "REB": 0,
+          "AST": 0,
+          "STL": 0,
+          "BLK": 0,
+          "3PM": 0,
+          "FG%": 0,
+          "FT%": 0,
+          "TO": 0,
+          "games": 0
+        }
+      ],
+      "players": []
+    },
+    {
+      "id": 4,
+      "name": "Can\u2019t Trust the Process",
+      "manager": "Dylan",
+      "wins": 0,
+      "losses": 0,
+      "weekly": [
+        {
+          "PTS": 0,
+          "REB": 0,
+          "AST": 0,
+          "STL": 0,
+          "BLK": 0,
+          "3PM": 0,
+          "FG%": 0,
+          "FT%": 0,
+          "TO": 0,
+          "games": 0
+        }
+      ],
+      "players": []
+    },
+    {
+      "id": 5,
+      "name": "Hill Billy Bugger Boys",
+      "manager": "Matthew",
+      "wins": 0,
+      "losses": 0,
+      "weekly": [
+        {
+          "PTS": 0,
+          "REB": 0,
+          "AST": 0,
+          "STL": 0,
+          "BLK": 0,
+          "3PM": 0,
+          "FG%": 0,
+          "FT%": 0,
+          "TO": 0,
+          "games": 0
+        }
+      ],
+      "players": []
+    },
+    {
+      "id": 6,
+      "name": "Team 6",
+      "manager": "Manager",
+      "wins": 0,
+      "losses": 0,
+      "weekly": [
+        {
+          "PTS": 0,
+          "REB": 0,
+          "AST": 0,
+          "STL": 0,
+          "BLK": 0,
+          "3PM": 0,
+          "FG%": 0,
+          "FT%": 0,
+          "TO": 0,
+          "games": 0
+        }
+      ],
+      "players": []
+    },
+    {
+      "id": 7,
+      "name": "Team 7",
+      "manager": "Manager",
+      "wins": 0,
+      "losses": 0,
+      "weekly": [
+        {
+          "PTS": 0,
+          "REB": 0,
+          "AST": 0,
+          "STL": 0,
+          "BLK": 0,
+          "3PM": 0,
+          "FG%": 0,
+          "FT%": 0,
+          "TO": 0,
+          "games": 0
+        }
+      ],
+      "players": []
+    },
+    {
+      "id": 8,
+      "name": "Team 8",
+      "manager": "Manager",
+      "wins": 0,
+      "losses": 0,
+      "weekly": [
+        {
+          "PTS": 0,
+          "REB": 0,
+          "AST": 0,
+          "STL": 0,
+          "BLK": 0,
+          "3PM": 0,
+          "FG%": 0,
+          "FT%": 0,
+          "TO": 0,
+          "games": 0
+        }
+      ],
+      "players": []
+    },
+    {
+      "id": 9,
+      "name": "Team 9",
+      "manager": "Manager",
+      "wins": 0,
+      "losses": 0,
+      "weekly": [
+        {
+          "PTS": 0,
+          "REB": 0,
+          "AST": 0,
+          "STL": 0,
+          "BLK": 0,
+          "3PM": 0,
+          "FG%": 0,
+          "FT%": 0,
+          "TO": 0,
+          "games": 0
+        }
+      ],
+      "players": []
+    },
+    {
+      "id": 10,
+      "name": "Blox",
+      "manager": "joshua",
+      "wins": 0,
+      "losses": 0,
+      "weekly": [
+        {
+          "PTS": 0,
+          "REB": 0,
+          "AST": 0,
+          "STL": 0,
+          "BLK": 0,
+          "3PM": 0,
+          "FG%": 0,
+          "FT%": 0,
+          "TO": 0,
+          "games": 0
+        }
+      ],
+      "players": []
+    },
+    {
+      "id": 11,
+      "name": "Shawn Temp ",
+      "manager": "Jeremy",
+      "wins": 0,
+      "losses": 0,
+      "weekly": [
+        {
+          "PTS": 0,
+          "REB": 0,
+          "AST": 0,
+          "STL": 0,
+          "BLK": 0,
+          "3PM": 0,
+          "FG%": 0,
+          "FT%": 0,
+          "TO": 0,
+          "games": 0
+        }
+      ],
+      "players": []
+    },
+    {
+      "id": 12,
+      "name": "JulianNewmanFanAccount",
+      "manager": "P",
+      "wins": 0,
+      "losses": 0,
+      "weekly": [
+        {
+          "PTS": 0,
+          "REB": 0,
+          "AST": 0,
+          "STL": 0,
+          "BLK": 0,
+          "3PM": 0,
+          "FG%": 0,
+          "FT%": 0,
+          "TO": 0,
+          "games": 0
+        }
+      ],
+      "players": []
+    }
+  ],
+  "schedule": [
+    [
+      [
+        8,
+        10
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        4,
+        7
+      ],
+      [
+        9,
+        12
+      ],
+      [
+        2,
+        11
+      ]
+    ]
+  ],
+  "transactions": [],
+  "trades": [],
+  "playerValues": {}
+}
