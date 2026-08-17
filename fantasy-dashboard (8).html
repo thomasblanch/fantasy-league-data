@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>League Pulse — 9-Cat Fantasy Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --bg: #0B0F14;
+  --panel: #131A22;
+  --panel-raised: #182029;
+  --line: #232D38;
+  --amber: #FFB020;
+  --hardwood: #E8793A;
+  --court: #F5F1E8;
+  --slate: #7C8B9B;
+  --win: #34C77B;
+  --loss: #E5484D;
+}
+*{box-sizing:border-box;}
+body{ margin:0; background:var(--bg); color:var(--court); font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; }
+.mono{font-family:'IBM Plex Mono',monospace;}
+
+.ticker-wrap{ background:var(--amber); color:#151008; overflow:hidden; white-space:nowrap; border-bottom:3px solid #8a5c12; }
+.ticker{ display:inline-block; padding-left:100%; animation:scroll 36s linear infinite; font-family:'Oswald',sans-serif; font-weight:600; font-size:14px; letter-spacing:.03em; padding-top:8px; padding-bottom:8px; }
+.ticker span{margin-right:48px;}
+@keyframes scroll{ 0%{transform:translateX(0);} 100%{transform:translateX(-100%);} }
+
+header{ padding:28px 32px 20px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; }
+.league-name{font-family:'Oswald',sans-serif; font-weight:700; font-size:30px; letter-spacing:.01em; text-transform:uppercase;}
+.league-sub{color:var(--slate); font-size:13px; margin-top:4px;}
+.week-badge{ background:var(--panel-raised); border:1px solid var(--line); border-radius:4px; padding:10px 18px; text-align:center; }
+.week-badge .num{font-family:'Oswald',sans-serif; font-size:28px; font-weight:700; color:var(--amber); line-height:1;}
+.week-badge .lbl{font-size:10px; letter-spacing:.12em; color:var(--slate); text-transform:uppercase; margin-top:2px;}
+
+nav{display:flex; gap:2px; padding:0 32px; border-bottom:1px solid var(--line); overflow-x:auto;}
+nav button{ background:none; border:none; color:var(--slate); padding:14px 14px; cursor:pointer; font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:.06em; text-transform:uppercase; border-bottom:3px solid transparent; white-space:nowrap; }
+nav button.active{color:var(--amber); border-bottom-color:var(--amber);}
+nav button:hover{color:var(--court);}
+
+main{padding:28px 32px 60px; max-width:1200px; margin:0 auto;}
+.panel{display:none;}
+.panel.active{display:block; animation:fadeIn .25s ease;}
+@keyframes fadeIn{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+
+.section-title{font-family:'Oswald',sans-serif; text-transform:uppercase; font-size:15px; letter-spacing:.08em; color:var(--slate); margin:0 0 10px;}
+.section-note{font-size:12px; color:var(--slate); margin:-8px 0 16px;}
+.explainer{
+  display:flex; gap:10px; align-items:flex-start;
+  background:var(--panel-raised); border:1px solid var(--line); border-left:3px solid var(--amber);
+  border-radius:4px; padding:12px 14px; margin:0 0 18px; font-size:13px; line-height:1.55; color:var(--court);
+}
+.explainer .icon{font-size:15px; line-height:1.4;}
+.explainer b{color:var(--amber); font-family:'Oswald',sans-serif; letter-spacing:.02em; text-transform:uppercase; font-size:11px; display:block; margin-bottom:2px;}
+.footnote{
+  margin-top:16px; padding:12px 14px 4px; border-top:1px dashed var(--line);
+  font-size:11.5px; color:var(--slate); line-height:1.7;
+}
+.footnote .fn-label{
+  color:var(--court); font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:.1em;
+  text-transform:uppercase; display:block; margin-bottom:6px;
+}
+.footnote ul{margin:0 0 8px; padding-left:16px;}
+.footnote li{margin-bottom:4px;}
+.footnote code{font-family:'IBM Plex Mono',monospace; color:var(--court); background:var(--bg); padding:1px 5px; border-radius:3px;}
+.card{background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:20px; margin-bottom:20px;}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+@media(max-width:820px){.grid2{grid-template-columns:1fr;}}
+
+.rank-row{display:flex; align-items:center; gap:14px; padding:10px 0; border-bottom:1px solid var(--line);}
+.rank-row:last-child{border-bottom:none;}
+.rank-num{font-family:'Oswald',sans-serif; font-size:20px; color:var(--slate); width:26px;}
+.rank-team{flex:1;}
+.rank-team .name{font-weight:600; font-size:14px;}
+.rank-team .mgr{color:var(--slate); font-size:12px;}
+.bar-track{background:var(--panel-raised); height:8px; border-radius:4px; flex:2; overflow:hidden;}
+.bar-fill{height:100%; background:linear-gradient(90deg,var(--hardwood),var(--amber));}
+.rank-score{font-family:'IBM Plex Mono',monospace; font-size:13px; min-width:52px; text-align:right;}
+
+.luck-row{display:flex; align-items:center; gap:12px; padding:8px 0; font-size:13px;}
+.luck-name{width:150px; font-weight:600;}
+.luck-bar-wrap{flex:1; position:relative; height:18px; background:var(--panel-raised); border-radius:3px;}
+.luck-zero{position:absolute; left:50%; top:0; bottom:0; width:1px; background:var(--line);}
+.luck-bar{position:absolute; top:1px; bottom:1px; border-radius:3px;}
+.luck-val{width:48px; text-align:right; font-family:'IBM Plex Mono',monospace;}
+
+.award-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px;}
+.award-card{background:var(--panel-raised); border:1px solid var(--line); border-radius:6px; padding:16px;}
+.award-tag{font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:.1em; color:var(--amber); text-transform:uppercase;}
+.award-winner{font-size:17px; font-weight:700; margin:6px 0 2px;}
+.award-detail{font-size:12px; color:var(--slate);}
+
+table.heat{width:100%; border-collapse:collapse; font-size:12px;}
+table.heat th, table.heat td{padding:8px 6px; text-align:center; border-bottom:1px solid var(--line);}
+table.heat th{color:var(--slate); font-weight:500; font-family:'Oswald',sans-serif; letter-spacing:.05em; text-transform:uppercase; font-size:10px;}
+table.heat td:first-child, table.heat th:first-child{text-align:left; font-weight:600;}
+.heat-cell{border-radius:3px; padding:4px 0; font-family:'IBM Plex Mono',monospace; display:inline-block; width:100%;}
+
+.txn-row{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--line); font-size:13px;}
+.txn-row:last-child{border-bottom:none;}
+.txn-player{font-weight:600;}
+.txn-team{color:var(--slate); font-size:11px;}
+.txn-val{font-family:'IBM Plex Mono',monospace; color:var(--win); white-space:nowrap;}
+
+.odds-row{display:flex; align-items:center; gap:12px; padding:9px 0; font-size:13px;}
+.odds-name{width:150px; font-weight:600;}
+.odds-track{flex:1; background:var(--panel-raised); border-radius:3px; height:14px; overflow:hidden;}
+.odds-fill{height:100%; background:linear-gradient(90deg,var(--win),#1f9e5c);}
+.odds-pct{width:48px; text-align:right; font-family:'IBM Plex Mono',monospace;}
+
+.streak-badge{font-family:'IBM Plex Mono',monospace; font-size:12px; padding:5px 12px; border-radius:12px; margin-left:8px; white-space:nowrap;}
+.sb-win{background:rgba(52,199,123,.15); color:var(--win);}
+.sb-loss{background:rgba(229,72,77,.15); color:var(--loss);}
+.sb-hot{background:rgba(255,176,32,.15); color:var(--amber);}
+.sb-cold{background:rgba(90,169,230,.15); color:#5AA9E6;}
+.punt-badge{font-family:'IBM Plex Mono',monospace; font-size:12px; padding:5px 12px; border-radius:12px; background:rgba(229,72,77,.15); color:var(--loss); white-space:nowrap;}
+
+.field-label{font-size:11px; color:var(--slate); display:block; margin-bottom:4px;}
+.field-input, .field-select{ width:100%; padding:9px 10px; background:var(--panel-raised); color:var(--court); border:1px solid var(--line); border-radius:4px; margin:0 0 12px; font-family:'Inter',sans-serif; font-size:13px; }
+.btn-primary{ background:var(--hardwood); color:#1a0e05; border:none; padding:9px 16px; border-radius:4px; font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:.05em; text-transform:uppercase; cursor:pointer; }
+
+.data-note{ margin-top:28px; padding:16px 18px; background:var(--panel); border:1px dashed var(--line); border-radius:6px; font-size:12px; color:var(--slate); line-height:1.6; }
+.data-note b{color:var(--court);}
+.data-note button{ background:var(--hardwood); color:#1a0e05; border:none; padding:8px 14px; border-radius:4px; font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:.05em; text-transform:uppercase; cursor:pointer; margin-top:10px; }
+textarea#jsonInput{ width:100%; height:110px; background:var(--panel-raised); color:var(--court); border:1px solid var(--line); border-radius:4px; padding:10px; font-family:'IBM Plex Mono',monospace; font-size:11px; margin-top:10px; display:none; }
+.status-msg{font-size:11px; margin-top:8px; color:var(--win);}
+.sweep-row{padding:10px 0; border-bottom:1px solid var(--line); font-size:13px;}
+.sweep-row:last-child{border-bottom:none;}
+.sweep-row .wk{color:var(--slate); font-size:11px;}
+</style>
+</head>
+<body>
+
+<div class="ticker-wrap"><div class="ticker" id="tickerText"></div></div>
+
+<header>
+  <div>
+    <div class="league-name" id="leagueNameEl">League Name</div>
+    <div class="league-sub" id="leagueSubEl">Loading...</div>
+  </div>
+  <div class="week-badge">
+    <div class="num" id="weekNumEl">-</div>
+    <div class="lbl">Current Week</div>
+  </div>
+</header>
+
+<nav id="tabNav">
+  <button data-tab="roto" class="active">Roto Power</button>
+  <button data-tab="luck">Cat Luck</button>
+  <button data-tab="awards">Weekly Awards</button>
+  <button data-tab="records">Category Records</button>
+  <button data-tab="punts">Punt Tracker</button>
+  <button data-tab="mvp">Category MVP</button>
+  <button data-tab="pace">Games Pace</button>
+  <button data-tab="txns">Waiver Wins</button>
+  <button data-tab="odds">Playoff Odds</button>
+  <button data-tab="streaks">Streaks</button>
+  <button data-tab="trend">Odds Trend</button>
+  <button data-tab="sweeps">Sweeps &amp; Nail-Biters</button>
+  <button data-tab="trades">Trades</button>
+</nav>
+
+<main>
+
+  <div class="panel active" id="panel-roto">
+    <p class="section-title">Roto Power Ranking</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>Who's actually the best team, independent of a lucky or unlucky schedule. Every week, each team gets graded 1st-to-10th in each of the 9 stat categories, and those grades are averaged all season. It answers "who would win if everyone played everyone, every week?" — a fairer measure than the standings alone.</div></div>
+    <div class="card" id="rotoList"></div>
+    <div class="footnote">
+      <span class="fn-label">How this is calculated</span>
+      <ul>
+        <li>Each week, in every one of the 9 categories, teams are ranked 1st–10th and awarded points: <code>10</code> for 1st down to <code>1</code> for last (standard "roto" scoring).</li>
+        <li>A team's weekly total is the sum of those points across all 9 categories (max possible: <code>90</code>/week).</li>
+        <li>The number shown is that weekly total <b>averaged across every week played this season</b> — it ignores who a team's actual opponent was that week.</li>
+        <li>Turnovers (TO) are ranked in reverse — fewer turnovers ranks higher.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-luck">
+    <p class="section-title">Category Luck</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>Whether a team's record is deserved or just down to a soft schedule. It compares the categories a team actually won against their real opponent to how many categories they'd have won on average against every other team that week. A big positive number means they're winning close calls; a big negative number means they're better than their record shows.</div></div>
+    <div class="card" id="luckList"></div>
+    <div class="footnote">
+      <span class="fn-label">How this is calculated</span>
+      <ul>
+        <li><b style="color:inherit;font:inherit;">Actual</b> = total categories won in a team's real matchups, summed across the season (max 9 per week).</li>
+        <li><b style="color:inherit;font:inherit;">Expected</b> = each week, the team's stat line is compared against <em>all 9 other teams individually</em> (not just their real opponent); the average number of categories they'd beat each of those 9 teams in is added to a running season total.</li>
+        <li>Luck = Actual − Expected. Positive means their real opponents let them win more categories than the league average would; negative means the opposite.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-awards">
+    <p class="section-title">This Week's Storylines</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>A quick, shareable recap of the week's headlines — who dominated, who had the closest call, who had a rough week, and whether anyone nearly swept every category. Built for dropping straight into the group chat.</div></div>
+    <div class="award-grid" id="awardsGrid"></div>
+    <div class="footnote">
+      <span class="fn-label">How this is calculated</span>
+      <ul>
+        <li><b style="color:inherit;font:inherit;">Manager of the Week / Rough Week</b>: ranked by average categories beaten against all 9 other teams that week (same "expected" method as Category Luck) — not by their actual matchup result.</li>
+        <li><b style="color:inherit;font:inherit;">Biggest Heartbreak</b>: the real matchup this week with the smallest gap between categories won and lost (closest to 5-4).</li>
+        <li><b style="color:inherit;font:inherit;">Sweep of the Week</b>: any real matchup this week where one team won 8 or all 9 categories; shows "None" if no matchup reached that.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-records">
+    <p class="section-title">Season Category Records (W-L-T)</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>For each of the 9 categories, how many individual category battles a team has actually won, lost, or tied against real opponents this season — like a mini win-loss record inside every stat. Handy for spotting exactly which categories are winning or losing matchups.</div></div>
+    <div class="card"><div style="overflow-x:auto;"><table class="heat" id="recordTable"></table></div></div>
+    <p class="section-title">Category Rank Heatmap</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>Where each team ranks league-wide (1 = best, 10 = worst) in each category's season average. Because it's a rank rather than a raw number, you can fairly compare a team's standing in points against their standing in free-throw percentage — something raw totals can't do. Greener/darker cells mean a stronger rank.</div></div>
+    <div class="card"><div style="overflow-x:auto;"><table class="heat" id="rankTable"></table></div></div>
+    <div class="footnote">
+      <span class="fn-label">How this is calculated</span>
+      <ul>
+        <li><b style="color:inherit;font:inherit;">W-L-T table</b>: tallies outcomes from a team's real weekly matchups only — this is what actually happened, category by category, opponent by opponent.</li>
+        <li><b style="color:inherit;font:inherit;">Rank heatmap</b>: uses a team's <em>season-average value</em> in each category (not matchup outcomes) to rank all 10 teams 1–10. A team can rank highly here while having a losing record in that category's W-L-T if their raw production is strong but their opponents happened to be stronger.</li>
+        <li>A tie in the W-L-T table only occurs when two teams post the exact same value in a category the same week — rare with real stats.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-punts">
+    <p class="section-title">Punt Detector</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>"Punting" is when a team deliberately (or accidentally) gives up on a category to focus elsewhere — like ignoring blocks to load up on assists. This flags any team that's finished in the bottom 3 of a category in 60% or more of the weeks so far, which is a strong sign they've written that category off. Useful ammo for trade talks.</div></div>
+    <div class="card" id="puntList"></div>
+    <div class="footnote">
+      <span class="fn-label">How this is calculated</span>
+      <ul>
+        <li>Each week, the 3 teams with the worst value in a category (lowest for most stats, highest turnovers for TO) are marked "bottom-3" for that category-week.</li>
+        <li>A team-category pair is flagged as a punt if it was bottom-3 in <b style="color:inherit;font:inherit;">60% or more</b> of weeks played this season. The 60% threshold is adjustable in the code.</li>
+        <li>This only looks at finishing position, not intent — a team could show up here from bad luck rather than a deliberate punt strategy.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-mvp">
+    <p class="section-title">Category MVP by Team</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>Every roster has one player quietly carrying more weight than the rest. This shows who that is for each team, and which single category they contribute the most to — the player you'd most want to ask about in a trade.</div></div>
+    <div class="card" id="mvpList"></div>
+    <div class="footnote">
+      <span class="fn-label">How this is calculated</span>
+      <ul>
+        <li>In the sample data, each player has a randomly generated "contribution share" per category — this is placeholder data, not real box-score attribution.</li>
+        <li>A player's overall value is the sum of their contribution across all 9 categories; the highest-value player per team is shown as that team's MVP.</li>
+        <li>To make this real, the data feed needs actual per-player per-category stat shares (e.g. each player's percentage of their team's total rebounds, assists, etc.) — the current export script does not yet calculate this.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-pace">
+    <p class="section-title">Games Played Pace</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>In counting categories (points, rebounds, assists, etc.), a team whose players simply play more games has a built-in edge — nothing to do with skill. This shows each team's total games played this season and whether last week's schedule was favorable (above league average) or thin (below it).</div></div>
+    <div class="card" id="paceList"></div>
+    <div class="footnote">
+      <span class="fn-label">How this is calculated</span>
+      <ul>
+        <li>Total games played is summed across every week of the season so far.</li>
+        <li>The "vs avg last wk" figure only compares the <b style="color:inherit;font:inherit;">most recent week</b> against that same week's 10-team league average — it does not reflect the whole season's pace.</li>
+        <li>Games played here reflects roster construction and streaming, not games actually started or points scored.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-txns">
+    <p class="section-title">Best Waiver Wire Pickups</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>Which free-agent adds have actually paid off since a manager picked them up — the "found gold on the waiver wire" leaderboard. Great for calling out a lucky streaming pickup, or admitting someone else out-scouted the league.</div></div>
+    <div class="card" id="txnList"></div>
+    <div class="footnote">
+      <span class="fn-label">How this is calculated</span>
+      <ul>
+        <li>The "value" number is whatever figure is supplied in the loaded data's <code>transactions</code> list — in the sample data it's a randomly generated placeholder, not a real stat.</li>
+        <li>For real data, this needs a defined formula (e.g. total fantasy points, or category-adjusted value, produced by that player since the add date) — the current export script stubs this at <code>0</code> and needs that logic added.</li>
+        <li>Only the most recent ~25 add transactions are considered, and the top 7 by value are shown.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-odds">
+    <p class="section-title">Playoff Odds</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>Each team's chance of finishing in a playoff spot, estimated by simulating the rest of the season thousands of times. Every simulated week, each remaining matchup is decided the same way a real one would be — category by category — based on how each team has actually been performing.</div></div>
+    <div class="card" id="oddsList"></div>
+    <div class="footnote">
+      <span class="fn-label">How this is calculated</span>
+      <ul>
+        <li>Each team's season-average and week-to-week variability in each category becomes a bell-curve model of their likely performance.</li>
+        <li>1,500 full remaining seasons are simulated. Each simulated week, opponents are drawn at random, and a random performance is sampled per category per team; whoever's simulated value is better wins that category, and whoever wins the majority of the 9 categories wins the matchup.</li>
+        <li>Remaining weeks assumed = <code>20 − current week</code> (the 20-week season-length assumption noted above). Top 6 simulated final records make the playoffs.</li>
+        <li>This ignores injuries, trades, and schedule strength for specific opponents — it's a statistical estimate, not a prediction.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-streaks">
+    <p class="section-title">Current Streaks</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>Who's rolling and who's slumping right now. The colored badge shows a current winning or losing streak in actual matchups; the "Hot/Cold" badge tracks whether a team has been scoring above or below the league average lately, even if their record doesn't show it yet.</div></div>
+    <div class="card" id="streakList"></div>
+    <div class="footnote">
+      <span class="fn-label">How this is calculated</span>
+      <ul>
+        <li><b style="color:inherit;font:inherit;">Win/loss streak</b>: consecutive real matchups won or lost in a row, most recent week counting backward.</li>
+        <li><b style="color:inherit;font:inherit;">Hot/Cold streak</b>: consecutive weeks a team's weekly roto score (see Roto Power Ranking) finished above or below that week's 10-team average, not a fixed number.</li>
+        <li>Both streaks reset to zero the moment the result flips, even by a single category or point.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-trend">
+    <p class="section-title">Championship Odds Over Time</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>How each team's playoff chances have risen and fallen as the season's gone on — so you can watch a team's stock climb after a big trade, or watch it crater after a rough stretch. Assumes a 20-week regular season; adjust TOTAL_SEASON_WEEKS in the code if your league runs longer or shorter.</div></div>
+    <div class="card" id="trendChart"></div>
+    <div class="footnote">
+      <span class="fn-label">How this is calculated</span>
+      <ul>
+        <li>Each checkpoint on the chart re-runs the same simulation as the Playoff Odds tab, but using only the data available through that week (fewer trials — 300 instead of 1,500 — to keep it fast, so this trend line is noisier than the main Playoff Odds number).</li>
+        <li>The chart starts a few weeks into the season once there's enough data to model each team's variability.</li>
+        <li>A callout appears when a team's simulated odds move 15 percentage points or more between two consecutive checkpoints.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-sweeps">
+    <p class="section-title">Sweeps &amp; Near-Sweeps</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>Any matchup where one team won 8 or all 9 categories — a total beatdown worth remembering (or living down).</div></div>
+    <div class="card" id="sweepList"></div>
+    <p class="section-title">Nail-Biter Percentage Categories</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>Field goal and free throw percentage often come down to a fraction of a percent. This surfaces matchups where one of those categories was decided by a razor-thin margin — the kind of finish that makes someone wish they'd started one more player.</div></div>
+    <div class="card" id="tightList"></div>
+    <div class="footnote">
+      <span class="fn-label">How this is calculated</span>
+      <ul>
+        <li><b style="color:inherit;font:inherit;">Sweeps</b>: any real matchup decided 8-1 or 9-0. The 6 most recent are shown.</li>
+        <li><b style="color:inherit;font:inherit;">Nail-biters</b>: only checks FG% and FT%, and flags a matchup where those percentages differed by less than <code>0.6</code> percentage points (<code>0.006</code>) between the two teams that week. The 6 most recent are shown.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-trades">
+    <p class="section-title">Trade Grade Leaderboard</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>Who has come out ahead across all the trades logged this season, added up into one running total. Positive means a manager has generally received more value than they've given up in trades; negative means the opposite.</div></div>
+    <div class="card" id="tradeLeaderboard"></div>
+
+    <p class="section-title">Log a Trade</p>
+    <div class="explainer"><span class="icon">💡</span><div><b>What this tells you</b>Log any trade here — just type each player's name and their real season z-score value fills in automatically. Only add a ":value" if you want to override it (e.g. a player just back from injury whose season average overstates their current form).</div></div>
+    <div class="card">
+      <div class="grid2">
+        <div>
+          <label class="field-label">Team A</label>
+          <select id="tradeTeamA" class="field-select"></select>
+          <label class="field-label">Players Team A sent (name, comma separated — add :value to override)</label>
+          <input id="tradePlayersA" class="field-input" type="text" list="playerNameList" placeholder="e.g. Trey Murphy III, Coby White:19">
+        </div>
+        <div>
+          <label class="field-label">Team B</label>
+          <select id="tradeTeamB" class="field-select"></select>
+          <label class="field-label">Players Team B sent (name, comma separated — add :value to override)</label>
+          <input id="tradePlayersB" class="field-input" type="text" list="playerNameList" placeholder="e.g. GG Jackson">
+        </div>
+      </div>
+      <datalist id="playerNameList"></datalist>
+      <button id="logTradeBtn" class="btn-primary">Log Trade</button>
+      <div id="tradeStatus" class="status-msg"></div>
+    </div>
+
+    <p class="section-title">Trade History</p>
+    <div class="card" id="tradeHistory"></div>
+    <div class="footnote">
+      <span class="fn-label">How this is calculated</span>
+      <ul>
+        <li>Player "value" is a <b style="color:inherit;font:inherit;">z-score total</b>: for each of the 9 categories, a player's season average is compared to the league-wide average and standard deviation across all rostered players, giving a "how many standard deviations above/below average" score. Those 9 scores are summed into one number (turnovers inverted, since fewer is better). This is the same approach sites like Basketball Monster and ESPN's Player Rater use.</li>
+        <li>If you type a player's name without a value, the dashboard looks up this real z-score automatically from the loaded league data. Add <code>:value</code> after a name to override it — useful for a player whose season average doesn't reflect their current form (recent injury, role change, etc).</li>
+        <li>A player not found in the league data is counted as <code>0</code> and flagged in the status message — usually means a name typo or a rookie/free agent not in the export yet.</li>
+        <li>A trade's grade is based on the absolute difference between the two sides' summed value: under 3 = Fair Deal, under 8 = Slight Edge, under 15 = Lopsided, 15+ = Highway Robbery. These thresholds are adjustable in the code.</li>
+        <li>The leaderboard sums, for each team, (value received − value given) across every logged trade — it does not account for how those players actually performed afterward.</li>
+        <li>Caveat: z-score value doesn't know your team's punt strategy — a player who's elite in a category you've punted is worth less to you specifically than this number suggests.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="data-note">
+    <b>This is running on sample data.</b> Two ways to load your real league:
+    <br><br>
+    <b>Manual (no setup):</b> run the export script with your ESPN league ID + cookies, then paste the JSON it prints below. Updates for everyone who opens this link until you paste again.
+    <br><br>
+    <b>Automatic (one-time setup):</b> put the export script in a GitHub repo with the included <code style="font-family:'IBM Plex Mono',monospace;background:var(--bg);padding:1px 5px;border-radius:3px;">.github/workflows/update-league-data.yml</code> file, add your league ID/cookies as repo secrets, and set <code style="font-family:'IBM Plex Mono',monospace;background:var(--bg);padding:1px 5px;border-radius:3px;">RAW_JSON_URL</code> near the top of this dashboard's code to your repo's raw JSON link. It'll then re-sync itself every time this page loads — no manual pasting needed.
+    <br>
+    <button id="loadDataBtn">Paste my league JSON</button>
+    <textarea id="jsonInput" placeholder='{"leagueName": "...", "week": 9, "teams": [...] }'></textarea>
+    <div id="loadStatus" class="status-msg"></div>
+  </div>
+
+</main>
+
+<script>
+const TOTAL_SEASON_WEEKS = 20;
+
+// Fill this in with your GitHub repo's raw JSON URL to enable automatic
+// weekly syncing via the GitHub Actions workflow (.github/workflows/update-league-data.yml).
+// Example: "https://raw.githubusercontent.com/yourusername/your-repo/main/league.json"
+// Leave blank ("") to disable auto-fetch and rely on manually pasted data only.
+const RAW_JSON_URL = "https://raw.githubusercontent.com/thomasblanch/fantasy-league-data/main/league.json";
+const CATEGORIES = ["PTS","REB","AST","STL","BLK","3PM","FG%","FT%","TO"];
+const LOWER_BETTER = {"TO": true};
+const CAT_BASE = {PTS:430, REB:190, AST:95, STL:32, BLK:18, "3PM":45, "FG%":0.46, "FT%":0.76, TO:65};
+const CAT_SPREAD = {PTS:60, REB:35, AST:20, STL:8, BLK:6, "3PM":12, "FG%":0.035, "FT%":0.05, TO:12};
+
+const TEAM_NAMES = [
+  ["Rim Reapers","Sam"], ["Dame Time Machine","Priya"], ["Bench Mob","Alex"],
+  ["Three & D Nothing Else","Jordan"], ["Load Management LLC","Kai"], ["The Zion Watch","Mo"],
+  ["Assist Me If You Can","Taylor"], ["Foul Trouble","Riley"], ["Clutch City","Devon"],
+  ["Analytics Department","Chris"]
+];
+const PLAYER_POOL = [
+  "Jaylen Wells","Ron Holland","Alex Sarr","Kyle Filipowski","GG Jackson","Trey Murphy III",
+  "Jalen Williams","Coby White","Bilal Coulibaly","Zach Edey","Amen Thompson","Scoot Henderson",
+  "Cason Wallace","Jaime Jaquez Jr.","Keyonte George","Anthony Black","Brandon Miller","Jett Howard",
+  "Dereck Lively II","Gradey Dick","Chet Holmgren","Victor Wembanyama","Paolo Banchero","Jabari Smith Jr.",
+  "Walker Kessler","Tari Eason","Jalen Duren","Jaden Ivey","Bennedict Mathurin","Shaedon Sharpe"
+];
+
+function seededRandom(seed){ let s = seed; return () => { s = (s*9301+49297)%233280; return s/233280; }; }
+
+function compareCatLines(a,b){
+  let aWins=0, bWins=0; const perCat={};
+  CATEGORIES.forEach(c=>{
+    const av=a[c], bv=b[c];
+    let winner;
+    if(av===bv) winner='tie';
+    else if(LOWER_BETTER[c]) winner = av<bv ? 'A' : 'B';
+    else winner = av>bv ? 'A' : 'B';
+    if(winner==='A') aWins++; else if(winner==='B') bWins++;
+    perCat[c] = { winner, diff: Math.abs(av-bv) };
+  });
+  return { aWins, bWins, perCat };
+}
+
+function buildSampleData(){
+  const rand = seededRandom(42);
+  const weeks = 9;
+
+  const playerValues = {};
+  PLAYER_POOL.forEach((p,i)=>{
+    // Rough stand-in for real z-score value (sum of 9 category z-scores) — real data comes from the export script.
+    playerValues[p] = Math.round((-3 + rand()*16) * 10) / 10;
+  });
+
+  const teams = TEAM_NAMES.map((t,i)=>{
+    const catSkew = {};
+    CATEGORIES.forEach(c=>{ catSkew[c] = 0.65 + rand()*0.7; });
+    const weekly = [];
+    for(let w=0; w<weeks; w++){
+      const catLine = {};
+      CATEGORIES.forEach(c=>{
+        let v = CAT_BASE[c]*catSkew[c] + (rand()-0.5)*CAT_SPREAD[c];
+        if(c==="FG%" || c==="FT%") v = Math.min(0.92, Math.max(0.28, v));
+        else v = Math.max(0, Math.round(v));
+        catLine[c] = v;
+      });
+      catLine.games = 30 + Math.floor(rand()*20);
+      weekly.push(catLine);
+    }
+    const players = [0,1,2].map(k=>{
+      const name = PLAYER_POOL[i*3+k];
+      const contribution = {};
+      CATEGORIES.forEach(c=>{ contribution[c] = rand()*0.35; });
+      return { name, contribution };
+    });
+    return { id:i, name:t[0], manager:t[1], weekly, players, wins:0, losses:0 };
+  });
+
+  const schedule = [];
+  for(let w=0; w<weeks; w++){
+    const order = [...Array(10).keys()];
+    for(let k=order.length-1;k>0;k--){ const j = Math.floor(rand()*(k+1)); [order[k],order[j]]=[order[j],order[k]]; }
+    const pairs = [];
+    for(let p=0; p<order.length; p+=2){
+      const a = order[p], b = order[p+1];
+      pairs.push([a,b]);
+      const res = compareCatLines(teams[a].weekly[w], teams[b].weekly[w]);
+      if(res.aWins > res.bWins){ teams[a].wins++; teams[b].losses++; }
+      else { teams[b].wins++; teams[a].losses++; }
+    }
+    schedule.push(pairs);
+  }
+
+  const transactions = PLAYER_POOL.slice(0,7).map((p,i)=>({
+    player:p, team: teams[i%10].name, valueSince: Math.round(40 + rand()*160)
+  })).sort((a,b)=>b.valueSince-a.valueSince);
+
+  const trades = [
+    { week:5, teamA:teams[0].name, playersA:[{name:"Jaylen Wells",ppg:playerValues["Jaylen Wells"]}], valueA:playerValues["Jaylen Wells"],
+      teamB:teams[3].name, playersB:[{name:"Coby White",ppg:playerValues["Coby White"]}], valueB:playerValues["Coby White"] },
+    { week:7, teamA:teams[2].name,
+      playersA:[{name:"GG Jackson",ppg:playerValues["GG Jackson"]},{name:"Ron Holland",ppg:playerValues["Ron Holland"]}],
+      valueA: playerValues["GG Jackson"]+playerValues["Ron Holland"],
+      teamB:teams[6].name, playersB:[{name:"Alex Sarr",ppg:playerValues["Alex Sarr"]}], valueB:playerValues["Alex Sarr"] }
+  ];
+
+  return { leagueName:"Hardwood Classic Fantasy League", week: weeks, teams, schedule, transactions, trades, playerValues };
+}
+
+let DATA = buildSampleData();
+
+// ---------- Computations ----------
+function computeCategoryRecords(data){
+  const rec = {};
+  data.teams.forEach(t=> rec[t.id] = Object.fromEntries(CATEGORIES.map(c=>[c,{w:0,l:0,t:0}])));
+  data.schedule.forEach((pairs,w)=>{
+    pairs.forEach(([aId,bId])=>{
+      const a = data.teams.find(t=>t.id===aId), b = data.teams.find(t=>t.id===bId);
+      const res = compareCatLines(a.weekly[w], b.weekly[w]);
+      CATEGORIES.forEach(c=>{
+        const outcome = res.perCat[c].winner;
+        if(outcome==='A'){ rec[aId][c].w++; rec[bId][c].l++; }
+        else if(outcome==='B'){ rec[bId][c].w++; rec[aId][c].l++; }
+        else { rec[aId][c].t++; rec[bId][c].t++; }
+      });
+    });
+  });
+  return rec;
+}
+
+function computeCategoryAverages(data){
+  return data.teams.map(t=>{
+    const avg = {};
+    CATEGORIES.forEach(c=>{ avg[c] = t.weekly.reduce((s,wk)=>s+wk[c],0)/t.weekly.length; });
+    return { id:t.id, name:t.name, avg };
+  });
+}
+
+function computeCategoryRanks(data){
+  const averages = computeCategoryAverages(data);
+  const ranks = {};
+  data.teams.forEach(t=> ranks[t.id]={});
+  CATEGORIES.forEach(c=>{
+    const sorted = [...averages].sort((x,y)=> LOWER_BETTER[c] ? x.avg[c]-y.avg[c] : y.avg[c]-x.avg[c]);
+    sorted.forEach((s,i)=>{ ranks[s.id][c] = i+1; });
+  });
+  return { ranks, averages };
+}
+
+function computeRoto(data){
+  const numWeeks = data.schedule.length;
+  const totals = {}; data.teams.forEach(t=>totals[t.id]=0);
+  for(let w=0; w<numWeeks; w++){
+    CATEGORIES.forEach(c=>{
+      const weekVals = data.teams.map(t=>({id:t.id, v:t.weekly[w][c]}));
+      const sorted = [...weekVals].sort((x,y)=> LOWER_BETTER[c] ? x.v-y.v : y.v-x.v);
+      sorted.forEach((s,i)=>{ totals[s.id] += (data.teams.length - i); });
+    });
+  }
+  return data.teams.map(t=>({
+    id:t.id, name:t.name, manager:t.manager,
+    avgRoto: totals[t.id]/numWeeks, maxPossible: CATEGORIES.length*data.teams.length
+  })).sort((a,b)=>b.avgRoto-a.avgRoto);
+}
+
+function computeWeeklyRoto(data, w){
+  const totals = {}; data.teams.forEach(t=>totals[t.id]=0);
+  CATEGORIES.forEach(c=>{
+    const weekVals = data.teams.map(t=>({id:t.id, v:t.weekly[w][c]}));
+    const sorted = [...weekVals].sort((x,y)=> LOWER_BETTER[c] ? x.v-y.v : y.v-x.v);
+    sorted.forEach((s,i)=>{ totals[s.id] += (data.teams.length - i); });
+  });
+  return totals;
+}
+
+function computeCategoryLuck(data){
+  const numWeeks = data.schedule.length;
+  const luck = {}; data.teams.forEach(t=>luck[t.id]={actual:0, expected:0});
+  for(let w=0; w<numWeeks; w++){
+    data.teams.forEach(t=>{
+      let expWinsThisWeek = 0, comparisons = 0;
+      data.teams.forEach(other=>{
+        if(other.id===t.id) return;
+        const res = compareCatLines(t.weekly[w], other.weekly[w]);
+        expWinsThisWeek += res.aWins; comparisons++;
+      });
+      luck[t.id].expected += expWinsThisWeek/comparisons;
+    });
+    data.schedule[w].forEach(([aId,bId])=>{
+      const a = data.teams.find(t=>t.id===aId), b = data.teams.find(t=>t.id===bId);
+      const res = compareCatLines(a.weekly[w], b.weekly[w]);
+      luck[aId].actual += res.aWins;
+      luck[bId].actual += res.bWins;
+    });
+  }
+  return data.teams.map(t=>({
+    name:t.name, manager:t.manager, luck: luck[t.id].actual - luck[t.id].expected
+  })).sort((a,b)=>b.luck-a.luck);
+}
+
+function computePunts(data){
+  const numWeeks = data.schedule.length;
+  const bottomCount = {};
+  data.teams.forEach(t=> bottomCount[t.id] = Object.fromEntries(CATEGORIES.map(c=>[c,0])));
+  for(let w=0; w<numWeeks; w++){
+    CATEGORIES.forEach(c=>{
+      const weekVals = data.teams.map(t=>({id:t.id, v:t.weekly[w][c]}));
+      const sorted = [...weekVals].sort((x,y)=> LOWER_BETTER[c] ? x.v-y.v : y.v-x.v);
+      sorted.slice(-3).forEach(s=> bottomCount[s.id][c]++);
+    });
+  }
+  const results = [];
+  data.teams.forEach(t=>{
+    CATEGORIES.forEach(c=>{
+      const freq = bottomCount[t.id][c]/numWeeks;
+      if(freq >= 0.6) results.push({ team:t.name, manager:t.manager, category:c, freq });
+    });
+  });
+  return results.sort((a,b)=>b.freq-a.freq);
+}
+
+function computeSweeps(data){
+  const sweeps = [], tightCalls = [];
+  data.schedule.forEach((pairs,w)=>{
+    pairs.forEach(([aId,bId])=>{
+      const a = data.teams.find(t=>t.id===aId), b = data.teams.find(t=>t.id===bId);
+      const res = compareCatLines(a.weekly[w], b.weekly[w]);
+      const maxWins = Math.max(res.aWins, res.bWins);
+      if(maxWins>=8){
+        const winner = res.aWins>res.bWins ? a : b, loser = res.aWins>res.bWins ? b : a;
+        sweeps.push({ week:w+1, winner:winner.name, loser:loser.name, score:`${maxWins}-${9-maxWins}` });
+      }
+      ["FG%","FT%"].forEach(c=>{
+        const d = res.perCat[c].diff;
+        if(d < 0.006) tightCalls.push({ week:w+1, teamA:a.name, teamB:b.name, category:c, diff:d });
+      });
+    });
+  });
+  return { sweeps: sweeps.sort((x,y)=>y.week-x.week).slice(0,6), tightCalls: tightCalls.sort((x,y)=>y.week-x.week).slice(0,6) };
+}
+
+function computeCategoryMVP(data){
+  return data.teams.map(t=>{
+    if(!t.players || !t.players.length) return { team:t.name, manager:t.manager, player:null };
+    let best = t.players[0], bestScore = -1, bestCat = CATEGORIES[0];
+    t.players.forEach(p=>{
+      const total = CATEGORIES.reduce((s,c)=>s+p.contribution[c],0);
+      if(total > bestScore){
+        bestScore = total; best = p;
+        bestCat = CATEGORIES.reduce((mc,c)=> p.contribution[c] > p.contribution[mc] ? c : mc, CATEGORIES[0]);
+      }
+    });
+    return { team:t.name, manager:t.manager, player:best.name, category:bestCat, share:(bestScore/CATEGORIES.length*100) };
+  });
+}
+
+function computeGamesPace(data){
+  const numWeeks = data.schedule.length;
+  const leagueAvgByWeek = [];
+  for(let w=0; w<numWeeks; w++){
+    const avg = data.teams.reduce((s,t)=>s+t.weekly[w].games,0)/data.teams.length;
+    leagueAvgByWeek.push(avg);
+  }
+  const lastIdx = numWeeks-1;
+  return data.teams.map(t=>{
+    const totalGames = t.weekly.reduce((s,wk)=>s+wk.games,0);
+    return {
+      name:t.name, manager:t.manager, totalGames,
+      avgPerWeek: totalGames/numWeeks,
+      diffLastWeek: t.weekly[lastIdx].games - leagueAvgByWeek[lastIdx]
+    };
+  }).sort((a,b)=>b.totalGames-a.totalGames);
+}
+
+function computeAwards(data){
+  const w = data.week-1;
+  const weeklyField = data.teams.map(t=>{
+    let expWinsThisWeek = 0, comparisons = 0;
+    data.teams.forEach(other=>{
+      if(other.id===t.id) return;
+      const res = compareCatLines(t.weekly[w], other.weekly[w]);
+      expWinsThisWeek += res.aWins; comparisons++;
+    });
+    return { id:t.id, name:t.name, manager:t.manager, fieldWins: expWinsThisWeek/comparisons };
+  }).sort((a,b)=>b.fieldWins-a.fieldWins);
+  const top = weeklyField[0], bottom = weeklyField[weeklyField.length-1];
+
+  let closest = null, closestGap = Infinity;
+  data.schedule[w].forEach(([aId,bId])=>{
+    const a = data.teams.find(t=>t.id===aId), b = data.teams.find(t=>t.id===bId);
+    const res = compareCatLines(a.weekly[w], b.weekly[w]);
+    const gap = Math.abs(res.aWins - res.bWins);
+    if(gap < closestGap){ closestGap = gap; closest = { a, b, score:`${Math.max(res.aWins,res.bWins)}-${Math.min(res.aWins,res.bWins)}` }; }
+  });
+
+  let sweepThisWeek = null;
+  data.schedule[w].forEach(([aId,bId])=>{
+    const a = data.teams.find(t=>t.id===aId), b = data.teams.find(t=>t.id===bId);
+    const res = compareCatLines(a.weekly[w], b.weekly[w]);
+    const maxWins = Math.max(res.aWins, res.bWins);
+    if(maxWins>=8){ sweepThisWeek = { winner: res.aWins>res.bWins?a:b, loser: res.aWins>res.bWins?b:a, score:`${maxWins}-${9-maxWins}` }; }
+  });
+
+  return [
+    { tag:"Manager of the Week", winner: top.name, detail:`${top.manager} would've beaten the full field in ${top.fieldWins.toFixed(1)} of 9 categories on average this week.` },
+    { tag:"Biggest Heartbreak", winner: `${closest.a.name} vs ${closest.b.name}`, detail:`Decided ${closest.score} — the tightest category battle of the week.` },
+    { tag:"Rough Week", winner: bottom.name, detail:`${bottom.manager} only edged the field in ${bottom.fieldWins.toFixed(1)} of 9 categories on average this week.` },
+    sweepThisWeek
+      ? { tag:"Sweep of the Week", winner:`${sweepThisWeek.winner.name} over ${sweepThisWeek.loser.name}`, detail:`Won it ${sweepThisWeek.score} — a near-total category sweep.` }
+      : { tag:"Sweep of the Week", winner:"None", detail:"Every matchup was contested across categories this week." },
+  ];
+}
+
+function simulateCategoryPlayoffOdds(data, trials, remainingWeeksOverride){
+  const stats = data.teams.map(t=>{
+    const catStats = {};
+    CATEGORIES.forEach(c=>{
+      const vals = t.weekly.map(wk=>wk[c]);
+      const mean = vals.reduce((a,b)=>a+b,0)/vals.length;
+      const variance = vals.reduce((a,b)=>a+(b-mean)**2,0)/vals.length;
+      catStats[c] = { mean, sd: Math.sqrt(variance) || (LOWER_BETTER[c] ? 5 : Math.max(mean*0.08,0.5)) };
+    });
+    return { id:t.id, name:t.name, wins:t.wins, catStats };
+  });
+  const remaining = remainingWeeksOverride ?? 4;
+  const playoffSpots = 6;
+  const made = new Array(stats.length).fill(0);
+  const rand = seededRandom(11);
+  function gauss(mean, sd){ const u1=Math.max(rand(),1e-6), u2=rand(); return mean + sd*Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*u2); }
+  for(let tr=0; tr<trials; tr++){
+    const simWins = stats.map(s=>s.wins);
+    for(let w=0; w<remaining; w++){
+      const order = [...Array(stats.length).keys()];
+      for(let k=order.length-1;k>0;k--){ const j=Math.floor(rand()*(k+1)); [order[k],order[j]]=[order[j],order[k]]; }
+      for(let p=0;p<order.length;p+=2){
+        const a=order[p], b=order[p+1];
+        let aCat=0,bCat=0;
+        CATEGORIES.forEach(c=>{
+          const va = gauss(stats[a].catStats[c].mean, stats[a].catStats[c].sd);
+          const vb = gauss(stats[b].catStats[c].mean, stats[b].catStats[c].sd);
+          const aBetter = LOWER_BETTER[c] ? va<vb : va>vb;
+          if(aBetter) aCat++; else bCat++;
+        });
+        if(aCat>bCat) simWins[a]++; else simWins[b]++;
+      }
+    }
+    const ranked = stats.map((s,i)=>({i, w:simWins[i]})).sort((x,y)=>y.w-x.w);
+    ranked.slice(0,playoffSpots).forEach(r=>made[r.i]++);
+  }
+  return stats.map((s,i)=>({ name:s.name, pct: made[i]/trials*100 })).sort((a,b)=>b.pct-a.pct);
+}
+
+function computeOddsHistory(data, trials){
+  const weeks = data.schedule.length;
+  const runningWins = {}; data.teams.forEach(t=>runningWins[t.id]=0);
+  const history = [];
+  const start = Math.max(3, Math.ceil(weeks/3));
+  for(let w=0; w<weeks; w++){
+    data.schedule[w].forEach(([aId,bId])=>{
+      const a = data.teams.find(t=>t.id===aId), b = data.teams.find(t=>t.id===bId);
+      const res = compareCatLines(a.weekly[w], b.weekly[w]);
+      if(res.aWins > res.bWins) runningWins[aId]++; else runningWins[bId]++;
+    });
+    const k = w+1;
+    if(k>=start){
+      const snapshotTeams = data.teams.map(t=>({ id:t.id, name:t.name, weekly:t.weekly.slice(0,k), wins:runningWins[t.id] }));
+      const remaining = Math.max(TOTAL_SEASON_WEEKS - k, 0);
+      const odds = simulateCategoryPlayoffOdds({teams:snapshotTeams}, trials, remaining);
+      history.push({ week:k, odds });
+    }
+  }
+  return history;
+}
+
+function buildWeeklyResults(data){
+  const numWeeks = data.schedule.length;
+  const roto = [];
+  for(let w=0; w<numWeeks; w++) roto.push(computeWeeklyRoto(data,w));
+  const results = {}; data.teams.forEach(t=> results[t.id] = []);
+  for(let w=0; w<numWeeks; w++){
+    const rotoVals = data.teams.map(t=>roto[w][t.id]);
+    const rotoAvg = rotoVals.reduce((a,b)=>a+b,0)/rotoVals.length;
+    data.schedule[w].forEach(([aId,bId])=>{
+      const a = data.teams.find(t=>t.id===aId), b = data.teams.find(t=>t.id===bId);
+      const res = compareCatLines(a.weekly[w], b.weekly[w]);
+      const aWin = res.aWins > res.bWins;
+      results[aId].push({ week:w, win:aWin, aboveAvg: roto[w][aId] >= rotoAvg });
+      results[bId].push({ week:w, win:!aWin, aboveAvg: roto[w][bId] >= rotoAvg });
+    });
+  }
+  return results;
+}
+
+function currentStreak(arr, key){
+  if(arr.length===0) return {value:null, length:0};
+  const last = arr[arr.length-1][key];
+  let len=0;
+  for(let i=arr.length-1;i>=0;i--){ if(arr[i][key]===last) len++; else break; }
+  return { value:last, length:len };
+}
+
+function computeStreaks(data){
+  const resultsByTeam = buildWeeklyResults(data);
+  return data.teams.map(t=>{
+    const arr = resultsByTeam[t.id];
+    return { name:t.name, manager:t.manager, winStreak: currentStreak(arr,'win'), scoreStreak: currentStreak(arr,'aboveAvg') };
+  });
+}
+
+// ---------- Rendering ----------
+function heatColor(val, min, max, invert){
+  let t = max>min ? (val-min)/(max-min) : 0.5;
+  if(invert) t = 1-t;
+  const r = Math.round(35 + t*(232-35));
+  const g = Math.round(72 + t*(121-72));
+  const b = Math.round(52 + t*(58-52));
+  return `rgba(${r},${g},${b},${0.25+t*0.55})`;
+}
+
+function render(){
+  document.getElementById('leagueNameEl').textContent = DATA.leagueName;
+  document.getElementById('leagueSubEl').textContent =
+    `${DATA.teams.length} managers · 9-category head-to-head${DATA._syncStatus ? ' · ' + DATA._syncStatus : ''}`;
+  document.getElementById('weekNumEl').textContent = DATA.week;
+
+  const awards = computeAwards(DATA);
+  const streaks = computeStreaks(DATA);
+  const hotStreak = streaks.filter(s=>s.winStreak.value===true && s.winStreak.length>=3)
+    .sort((a,b)=>b.winStreak.length-a.winStreak.length)[0];
+  const punts = computePunts(DATA);
+  let tickerItems = awards.map(a=>`<span>🏀 ${a.tag.toUpperCase()}: ${a.winner}</span>`);
+  if(hotStreak) tickerItems.unshift(`<span>🔥 ${hotStreak.name.toUpperCase()} IS ON A ${hotStreak.winStreak.length}-MATCHUP WIN STREAK</span>`);
+  if(punts.length) tickerItems.push(`<span>🚫 ${punts[0].team.toUpperCase()} IS PUNTING ${punts[0].category}</span>`);
+  tickerItems.push(`<span>🏀 ${DATA.teams.length} TEAMS · WEEK ${DATA.week} LIVE</span>`);
+  document.getElementById('tickerText').innerHTML = tickerItems.join('');
+
+  // Roto power ranking
+  const roto = computeRoto(DATA);
+  const maxRoto = Math.max(...roto.map(r=>r.avgRoto));
+  document.getElementById('rotoList').innerHTML = roto.map((t,i)=>`
+    <div class="rank-row">
+      <div class="rank-num">${i+1}</div>
+      <div class="rank-team"><div class="name">${t.name}</div><div class="mgr">${t.manager}</div></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(t.avgRoto/maxRoto*100).toFixed(0)}%"></div></div>
+      <div class="rank-score mono">${t.avgRoto.toFixed(1)}/${t.maxPossible}</div>
+    </div>`).join('');
+
+  // Category luck
+  const luck = computeCategoryLuck(DATA);
+  const maxLuck = Math.max(...luck.map(t=>Math.abs(t.luck)), 1);
+  document.getElementById('luckList').innerHTML = luck.map(t=>{
+    const pct = Math.min(Math.abs(t.luck)/maxLuck*50, 50);
+    const positive = t.luck >= 0;
+    const style = positive
+      ? `left:calc(50% + 1px); width:${pct}%; background:var(--win);`
+      : `right:calc(50% + 1px); width:${pct}%; background:var(--loss);`;
+    return `<div class="luck-row">
+      <div class="luck-name">${t.name}</div>
+      <div class="luck-bar-wrap"><div class="luck-zero"></div><div class="luck-bar" style="${style}"></div></div>
+      <div class="luck-val">${t.luck>=0?'+':''}${t.luck.toFixed(1)}</div>
+    </div>`;
+  }).join('');
+
+  // Awards
+  document.getElementById('awardsGrid').innerHTML = awards.map(a=>`
+    <div class="award-card">
+      <div class="award-tag">${a.tag}</div>
+      <div class="award-winner">${a.winner}</div>
+      <div class="award-detail">${a.detail}</div>
+    </div>`).join('');
+
+  // Category records table
+  const rec = computeCategoryRecords(DATA);
+  let recHead = '<tr><th>Team</th>' + CATEGORIES.map(c=>`<th>${c}</th>`).join('') + '</tr>';
+  let recRows = DATA.teams.map(t=>{
+    const cells = CATEGORIES.map(c=>{
+      const r = rec[t.id][c];
+      return `<td class="mono">${r.w}-${r.l}${r.t?('-'+r.t):''}</td>`;
+    }).join('');
+    return `<tr><td>${t.name}</td>${cells}</tr>`;
+  }).join('');
+  document.getElementById('recordTable').innerHTML = recHead + recRows;
+
+  // Rank heatmap
+  const { ranks } = computeCategoryRanks(DATA);
+  let rankHead = '<tr><th>Team</th>' + CATEGORIES.map(c=>`<th>${c}</th>`).join('') + '</tr>';
+  let rankRows = DATA.teams.map(t=>{
+    const cells = CATEGORIES.map(c=>{
+      const r = ranks[t.id][c];
+      return `<td><span class="heat-cell" style="background:${heatColor(r,1,DATA.teams.length,true)}">${r}</span></td>`;
+    }).join('');
+    return `<tr><td>${t.name}</td>${cells}</tr>`;
+  }).join('');
+  document.getElementById('rankTable').innerHTML = rankHead + rankRows;
+
+  // Punts
+  document.getElementById('puntList').innerHTML = punts.length ? punts.map(p=>`
+    <div class="rank-row">
+      <div class="rank-team"><div class="name">${p.team}</div><div class="mgr">${p.manager}</div></div>
+      <span class="punt-badge">PUNTING ${p.category} · bottom-3 in ${(p.freq*100).toFixed(0)}% of weeks</span>
+    </div>`).join('') : '<p style="color:var(--slate);font-size:13px;">No clear season-long punts yet.</p>';
+
+  // MVP
+  const mvps = computeCategoryMVP(DATA);
+  document.getElementById('mvpList').innerHTML = mvps.map(m=>`
+    <div class="rank-row">
+      <div class="rank-team"><div class="name">${m.team}</div><div class="mgr">${m.manager}</div></div>
+      <div class="rank-team"><div class="name">${m.player || '—'}</div><div class="mgr">${m.player ? 'Driving ' + m.category : ''}</div></div>
+    </div>`).join('');
+
+  // Pace
+  const pace = computeGamesPace(DATA);
+  document.getElementById('paceList').innerHTML = pace.map(p=>`
+    <div class="rank-row">
+      <div class="rank-team"><div class="name">${p.name}</div><div class="mgr">${p.manager} · ${p.avgPerWeek.toFixed(1)} games/wk avg</div></div>
+      <div class="rank-score mono" style="color:${p.diffLastWeek>=0?'var(--win)':'var(--loss)'}">${p.diffLastWeek>=0?'+':''}${p.diffLastWeek.toFixed(0)} vs avg last wk</div>
+    </div>`).join('');
+
+  // Waiver
+  document.getElementById('txnList').innerHTML = DATA.transactions.map(tx=>`
+    <div class="txn-row">
+      <div><div class="txn-player">${tx.player}</div><div class="txn-team">${tx.team}</div></div>
+      <div class="txn-val">+${tx.valueSince}</div>
+    </div>`).join('');
+
+  // Playoff odds
+  const remainingNow = Math.max(TOTAL_SEASON_WEEKS - DATA.week, 1);
+  const odds = simulateCategoryPlayoffOdds(DATA, 1500, remainingNow);
+  document.getElementById('oddsList').innerHTML = odds.map(o=>`
+    <div class="odds-row">
+      <div class="odds-name">${o.name}</div>
+      <div class="odds-track"><div class="odds-fill" style="width:${o.pct.toFixed(0)}%"></div></div>
+      <div class="odds-pct">${o.pct.toFixed(0)}%</div>
+    </div>`).join('');
+
+  renderStreaks();
+  renderOddsTrend();
+  renderSweeps();
+  renderTrades();
+}
+
+function renderStreaks(){
+  const streaks = computeStreaks(DATA);
+  document.getElementById('streakList').innerHTML = streaks.map(s=>{
+    const wBadge = s.winStreak.length>0
+      ? `<span class="streak-badge ${s.winStreak.value?'sb-win':'sb-loss'}">${s.winStreak.value?'W':'L'}${s.winStreak.length}</span>` : '';
+    const cBadge = s.scoreStreak.length>0
+      ? `<span class="streak-badge ${s.scoreStreak.value?'sb-hot':'sb-cold'}">${s.scoreStreak.value?'Hot':'Cold'} ${s.scoreStreak.length}wk</span>` : '';
+    return `<div class="rank-row"><div class="rank-team"><div class="name">${s.name}</div><div class="mgr">${s.manager}</div></div>${wBadge}${cBadge}</div>`;
+  }).join('');
+}
+
+function renderOddsTrend(){
+  const container = document.getElementById('trendChart');
+  const history = computeOddsHistory(DATA, 300);
+  if(history.length < 2){
+    container.innerHTML = '<p style="color:var(--slate);font-size:13px;">Need a few more weeks of data to show a trend.</p>';
+    return;
+  }
+  const width = 760, height = 320, padL=40, padB=30, padT=10, padR=10;
+  const plotW = width-padL-padR, plotH = height-padT-padB;
+  const xStep = plotW/(history.length-1);
+  const palette = ['#E8793A','#FFB020','#34C77B','#5AA9E6','#C77DFF','#FF6B9D','#4DD0E1','#F4A261','#9B8AFB','#EAB308'];
+
+  const series = DATA.teams.map((t,idx)=>({
+    name: t.name, color: palette[idx%palette.length],
+    values: history.map(h=> (h.odds.find(o=>o.name===t.name)||{}).pct ?? 0)
+  }));
+
+  function xy(i,val){ const x = padL + i*xStep; const y = padT + plotH - (val/100*plotH); return [x,y]; }
+
+  let gridLines = '';
+  [0,25,50,75,100].forEach(v=>{
+    const y = padT + plotH - (v/100*plotH);
+    gridLines += `<line x1="${padL}" y1="${y}" x2="${width-padR}" y2="${y}" stroke="#232D38" stroke-width="1"/>`;
+    gridLines += `<text x="${padL-8}" y="${y+4}" fill="#7C8B9B" font-size="10" text-anchor="end" font-family="IBM Plex Mono, monospace">${v}%</text>`;
+  });
+
+  let paths = '';
+  series.forEach(s=>{
+    const pts = s.values.map((v,i)=>xy(i,v).join(',')).join(' ');
+    paths += `<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="2.5" opacity="0.9"/>`;
+  });
+
+  let xLabels = '';
+  const labelEvery = Math.max(1, Math.ceil(history.length/8));
+  history.forEach((h,i)=>{
+    if(i%labelEvery===0 || i===history.length-1){
+      const [x] = xy(i,0);
+      xLabels += `<text x="${x}" y="${height-8}" fill="#7C8B9B" font-size="10" text-anchor="middle" font-family="IBM Plex Mono, monospace">W${h.week}</text>`;
+    }
+  });
+
+  const svg = `<svg viewBox="0 0 ${width} ${height}" style="width:100%;height:auto;">${gridLines}${paths}${xLabels}</svg>`;
+  const legend = series.map(s=>`<span style="display:inline-flex;align-items:center;gap:6px;margin-right:14px;margin-bottom:6px;font-size:11px;color:#F5F1E8;"><span style="width:10px;height:10px;border-radius:2px;background:${s.color};display:inline-block;"></span>${s.name}</span>`).join('');
+
+  let callouts = [];
+  series.forEach(s=>{
+    for(let i=1;i<s.values.length;i++){
+      const delta = s.values[i]-s.values[i-1];
+      if(Math.abs(delta)>=15) callouts.push(`${s.name} ${delta>0?'jumped':'dropped'} ${Math.abs(delta).toFixed(0)} points in playoff odds between week ${history[i-1].week} and week ${history[i].week}.`);
+    }
+  });
+
+  container.innerHTML = svg + `<div style="margin-top:12px;">${legend}</div>` +
+    (callouts.length ? `<div style="margin-top:14px;padding-top:14px;border-top:1px solid #232D38;">` +
+      callouts.slice(0,5).map(c=>`<div style="font-size:12px;color:#7C8B9B;margin-bottom:6px;">⚡ ${c}</div>`).join('') + `</div>` : '');
+}
+
+function renderSweeps(){
+  const { sweeps, tightCalls } = computeSweeps(DATA);
+  document.getElementById('sweepList').innerHTML = sweeps.length ? sweeps.map(s=>`
+    <div class="sweep-row"><div class="wk">Week ${s.week}</div><b>${s.winner}</b> swept <b>${s.loser}</b> ${s.score}</div>
+  `).join('') : '<p style="color:var(--slate);font-size:13px;">No sweeps yet this season.</p>';
+
+  document.getElementById('tightList').innerHTML = tightCalls.length ? tightCalls.map(t=>`
+    <div class="sweep-row"><div class="wk">Week ${t.week}</div>${t.teamA} vs ${t.teamB} — ${t.category} decided by ${(t.diff*100).toFixed(2)} pts</div>
+  `).join('') : '<p style="color:var(--slate);font-size:13px;">No razor-thin percentage battles yet.</p>';
+}
+
+function findPlayerValue(name){
+  if(!DATA.playerValues) return null;
+  const match = Object.keys(DATA.playerValues).find(k=>k.toLowerCase()===name.toLowerCase());
+  return match !== undefined ? DATA.playerValues[match] : null;
+}
+
+function parsePlayers(str){
+  return str.split(',').map(s=>s.trim()).filter(Boolean).map(entry=>{
+    const [namePart, valStr] = entry.split(':').map(x=>x!==undefined?x.trim():x);
+    const name = namePart || 'Unnamed';
+    if(valStr !== undefined && valStr !== ''){
+      return { name, ppg: parseFloat(valStr) || 0, source:'manual' };
+    }
+    const looked = findPlayerValue(name);
+    if(looked !== null) return { name, ppg: looked, source:'real' };
+    return { name, ppg: 0, source:'unmatched' };
+  });
+}
+
+function gradeFor(diff){
+  const ad = Math.abs(diff);
+  if(ad<3) return 'Fair Deal';
+  if(ad<8) return 'Slight Edge';
+  if(ad<15) return 'Lopsided';
+  return 'Highway Robbery';
+}
+
+function populateTradeSelects(){
+  const a = document.getElementById('tradeTeamA'), b = document.getElementById('tradeTeamB');
+  const opts = DATA.teams.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+  const prevA = a.value, prevB = b.value;
+  a.innerHTML = opts; b.innerHTML = opts;
+  if(prevA) a.value = prevA;
+  if(prevB) b.value = prevB; else if(DATA.teams[1]) b.value = DATA.teams[1].id;
+  const list = document.getElementById('playerNameList');
+  if(list && DATA.playerValues){
+    list.innerHTML = Object.keys(DATA.playerValues).map(n=>`<option value="${n}">`).join('');
+  }
+}
+
+function renderTrades(){
+  populateTradeSelects();
+  const trades = DATA.trades || [];
+  const net = {};
+  DATA.teams.forEach(t=>net[t.name]=0);
+  trades.forEach(tr=>{
+    net[tr.teamA] = (net[tr.teamA]||0) + (tr.valueB - tr.valueA);
+    net[tr.teamB] = (net[tr.teamB]||0) + (tr.valueA - tr.valueB);
+  });
+  const ranked = Object.entries(net).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('tradeLeaderboard').innerHTML = trades.length ? ranked.map(([name,val])=>`
+    <div class="rank-row"><div class="rank-team"><div class="name">${name}</div></div>
+    <div class="rank-score mono" style="color:${val>=0?'#34C77B':'#E5484D'}">${val>=0?'+':''}${val.toFixed(1)} net</div></div>
+  `).join('') : '<p style="color:var(--slate);font-size:13px;">No trades logged yet.</p>';
+
+  document.getElementById('tradeHistory').innerHTML = trades.length ? trades.slice().reverse().map(tr=>{
+    const diff = tr.valueB - tr.valueA;
+    const fmtPlayers = ps => ps.map(p=>`${p.name}${p.source==='manual'?' (manual)':p.source==='unmatched'?' (no data — 0)':''}`).join(', ');
+    return `<div class="txn-row" style="align-items:flex-start;">
+      <div>
+        <div class="txn-player">${tr.teamA} &harr; ${tr.teamB} <span style="color:var(--slate);font-weight:400;">(Week ${tr.week})</span></div>
+        <div class="txn-team">${tr.teamA} sent: ${fmtPlayers(tr.playersA)} — ${tr.teamB} sent: ${fmtPlayers(tr.playersB)}</div>
+      </div>
+      <div class="txn-val" style="color:var(--amber);">${gradeFor(diff)}</div>
+    </div>`;
+  }).join('') : '<p style="color:var(--slate);font-size:13px;">Log your league\'s trades above to start tracking who\'s winning them.</p>';
+}
+
+document.getElementById('logTradeBtn').addEventListener('click', ()=>{
+  const teamAId = parseInt(document.getElementById('tradeTeamA').value);
+  const teamBId = parseInt(document.getElementById('tradeTeamB').value);
+  const playersA = parsePlayers(document.getElementById('tradePlayersA').value);
+  const playersB = parsePlayers(document.getElementById('tradePlayersB').value);
+  const status = document.getElementById('tradeStatus');
+  if(teamAId===teamBId){ status.style.color='var(--loss)'; status.textContent='Pick two different teams.'; return; }
+  if(!playersA.length || !playersB.length){ status.style.color='var(--loss)'; status.textContent='Add at least one player on each side.'; return; }
+  const unmatched = [...playersA, ...playersB].filter(p=>p.source==='unmatched').map(p=>p.name);
+  const valueA = playersA.reduce((s,p)=>s+p.ppg,0);
+  const valueB = playersB.reduce((s,p)=>s+p.ppg,0);
+  const teamA = DATA.teams.find(t=>t.id===teamAId), teamB = DATA.teams.find(t=>t.id===teamBId);
+  const trade = { week: DATA.week, teamA: teamA.name, playersA, valueA, teamB: teamB.name, playersB, valueB };
+  DATA.trades = DATA.trades || [];
+  DATA.trades.push(trade);
+  window.storage?.set('league-trades', JSON.stringify(DATA.trades), true).catch(()=>{});
+  document.getElementById('tradePlayersA').value=''; document.getElementById('tradePlayersB').value='';
+  if(unmatched.length){
+    status.style.color='var(--amber)';
+    status.textContent = `Trade logged, but no real value found for: ${unmatched.join(', ')} — counted as 0. Add ":value" after the name to set it manually.`;
+  } else {
+    status.style.color='var(--win)'; status.textContent='Trade logged using real season z-score values.';
+  }
+  renderTrades();
+});
+
+document.getElementById('tabNav').addEventListener('click', e=>{
+  const btn = e.target.closest('button'); if(!btn) return;
+  document.querySelectorAll('#tabNav button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+});
+
+document.getElementById('loadDataBtn').addEventListener('click', ()=>{
+  const ta = document.getElementById('jsonInput');
+  if(ta.style.display === 'none' || !ta.style.display){ ta.style.display = 'block'; return; }
+  const status = document.getElementById('loadStatus');
+  try{
+    const parsed = JSON.parse(ta.value);
+    if(!parsed.teams || !Array.isArray(parsed.teams)) throw new Error("Missing teams array");
+    const prevTrades = DATA.trades;
+    DATA = parsed;
+    if(!DATA.trades) DATA.trades = prevTrades || [];
+    render();
+    status.textContent = "Loaded — dashboard updated for everyone with this link.";
+    window.storage?.set('league-data', ta.value, true).catch(()=>{});
+  } catch(err){
+    status.style.color = 'var(--loss)';
+    status.textContent = "Couldn't parse that JSON: " + err.message;
+  }
+});
+
+(async function init(){
+  let loadedFromRemote = false;
+
+  if(RAW_JSON_URL){
+    try{
+      // cache-bust so the browser doesn't serve a stale cached copy of the JSON
+      const resp = await fetch(RAW_JSON_URL + (RAW_JSON_URL.includes('?') ? '&' : '?') + 't=' + Date.now(), { cache:'no-store' });
+      if(resp.ok){
+        const parsed = await resp.json();
+        if(parsed && Array.isArray(parsed.teams)){
+          DATA = parsed;
+          DATA._syncStatus = 'auto-synced from GitHub';
+          loadedFromRemote = true;
+          // keep a local copy too, so manual re-opens still work if the fetch ever fails
+          window.storage?.set('league-data', JSON.stringify(parsed), true).catch(()=>{});
+        }
+      }
+    } catch(e){
+      console.warn('Auto-fetch from RAW_JSON_URL failed, falling back to saved/sample data', e);
+    }
+  }
+
+  if(!loadedFromRemote){
+    try{
+      const saved = await window.storage?.get('league-data', true);
+      if(saved && saved.value){
+        DATA = JSON.parse(saved.value);
+        DATA._syncStatus = RAW_JSON_URL ? 'auto-fetch failed — showing last saved data' : 'manually pasted data';
+      }
+    } catch(e){ /* no saved league data yet */ }
+  }
+
+  try{
+    const savedTrades = await window.storage?.get('league-trades', true);
+    if(savedTrades && savedTrades.value){ DATA.trades = JSON.parse(savedTrades.value); }
+  } catch(e){ /* no saved trades yet */ }
+  render();
+})();
+</script>
+</body>
+</html>
