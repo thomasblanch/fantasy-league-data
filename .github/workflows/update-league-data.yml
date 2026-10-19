@@ -42,6 +42,17 @@ jobs:
             --espn-s2 "$ESPN_S2" \
             > league.json
 
+      - name: Stamp the update time
+        run: |
+          python - <<'PY'
+          import json, datetime
+          with open('league.json') as f:
+              data = json.load(f)
+          data['generatedAt'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
+          with open('league.json', 'w') as f:
+              json.dump(data, f, indent=2)
+          PY
+
       - name: Commit updated data
         run: |
           git config user.name "league-data-bot"
