@@ -1,17 +1,14 @@
 name: Update Fantasy League Data
 
-# Runs on a schedule and can also be triggered manually from the
-# "Actions" tab in GitHub with the "Run workflow" button.
+# Runs daily and can also be triggered manually from the Actions tab
+# with the "Run workflow" button.
 on:
   schedule:
-    # Every Monday at 13:00 UTC. Cron times are always UTC regardless
-    # of your timezone — adjust the hour to suit when your NBA fantasy
-    # week actually rolls over. Format: minute hour day month weekday.
-    # Examples:
-    #   '0 13 * * 1'   -> weekly, Monday 13:00 UTC
-    #   '0 12 * * *'   -> daily at 12:00 UTC
-    - cron: '0 13 * * 1'
-  workflow_dispatch: {}
+    # 6:00pm Sydney time. Cron is fixed UTC and does not adjust for daylight saving.
+    #   AEDT (UTC+11, ~Oct-Apr): '0 7 * * *'  -> 6:00pm AEDT
+    #   AEST (UTC+10, ~Apr-Oct): '0 8 * * *'  -> 6:00pm AEST
+    - cron: '0 7 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -30,32 +27,6 @@ jobs:
 
       - name: Install espn_api
         run: pip install espn_api
-
-      - name: Debug — check secrets are set correctly (no values printed)
-        env:
-          LEAGUE_ID: ${{ secrets.ESPN_LEAGUE_ID }}
-          YEAR: ${{ secrets.ESPN_YEAR }}
-          SWID: ${{ secrets.ESPN_SWID }}
-          ESPN_S2: ${{ secrets.ESPN_S2 }}
-        run: |
-          echo "LEAGUE_ID length: ${#LEAGUE_ID} (expect ~9-10 digits, just numbers)"
-          echo "YEAR length: ${#YEAR} (expect 4, e.g. 2026)"
-          echo "SWID length: ${#SWID} (expect ~38, including the { } braces)"
-          echo "ESPN_S2 length: ${#ESPN_S2} (expect 150-250+, a long encoded string)"
-          echo "SWID starts with a brace: $([ "${SWID:0:1}" = "{" ] && echo yes || echo NO — missing opening brace)"
-          echo "SWID ends with a brace: $([ "${SWID: -1}" = "}" ] && echo yes || echo NO — missing closing brace)"
-
-      - name: Test ESPN connection directly (bypasses the Python script)
-        env:
-          LEAGUE_ID: ${{ secrets.ESPN_LEAGUE_ID }}
-          YEAR: ${{ secrets.ESPN_YEAR }}
-          SWID: ${{ secrets.ESPN_SWID }}
-          ESPN_S2: ${{ secrets.ESPN_S2 }}
-        run: |
-          echo "HTTP status from ESPN (200 = success, 401/403 = bad cookies, 404 = bad league ID/year):"
-          curl -s -o /dev/null -w "%{http_code}\n" \
-            "https://fantasy.espn.com/apis/v3/games/fba/seasons/$YEAR/segments/0/leagues/$LEAGUE_ID?view=mSettings" \
-            -H "Cookie: swid=$SWID; espn_s2=$ESPN_S2"
 
       - name: Run export script
         env:
@@ -76,12 +47,5 @@ jobs:
           git config user.name "league-data-bot"
           git config user.email "actions@github.com"
           git add league.json
-          # only commit if the file actually changed, so we don't spam
-          # the repo history with empty commits every week
-          git diff --quiet --cached || git commit -m "Update league data $(date -u +'%Y-%m-%d')"
-          git push
-
-          # only commit if the file actually changed, so we don't spam
-          # the repo history with empty commits every week
           git diff --quiet --cached || git commit -m "Update league data $(date -u +'%Y-%m-%d')"
           git push
