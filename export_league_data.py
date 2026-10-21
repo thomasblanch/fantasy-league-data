@@ -307,6 +307,7 @@ def build_payload(league, year, debug_player=None):
     return {
         "leagueName": league.settings.name,
         "week": len(schedule),
+        "inProgressWeek": len(schedule) if schedule and len(schedule) == current_week else None,
         "teams": teams,
         "schedule": schedule,
         "transactions": transactions,
