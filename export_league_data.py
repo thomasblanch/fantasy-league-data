@@ -256,23 +256,29 @@ def build_transactions(league, player_values, limit=10):
     acquisition date forward, which needs per-game logs rather than
     season averages. Treat this as "how good is this pickup right now",
     not a precise post-acquisition production number."""
-    transactions = []
+        transactions = []
+    seen = set()
     try:
-        for act in league.recent_activity(size=25):
+        for act in league.recent_activity(size=100):
             for action in act.actions:
-                team, move_type, player, _ = action
-                if move_type == "FA ADDED":
-                    transactions.append({
-                        "player": str(player),
-                        "team": team.team_name,
-                        "valueSince": player_values.get(str(player), 0),
-                    })
+                team, move_type, player, *_ = action
+                if "ADDED" not in str(move_type).upper():
+                    continue
+                key = (team.team_id, str(player), getattr(act, "date", None))
+                if key in seen:
+                    continue
+                seen.add(key)
+                transactions.append({
+                    "player": str(player),
+                    "team": team.team_name,
+                    "valueSince": round(player_values.get(str(player), 0), 1),
+                })
     except Exception as e:
         print(f"warning: couldn't read recent activity: {e}", file=sys.stderr)
 
+    print(f"info: found {len(transactions)} pickups in recent activity", file=sys.stderr)
     transactions.sort(key=lambda t: t["valueSince"], reverse=True)
     return transactions[:limit]
-
 
 # ---------- Main payload ----------
 
