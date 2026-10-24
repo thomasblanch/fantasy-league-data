@@ -946,7 +946,58 @@
       ]
     ]
   ],
-  "transactions": [],
+  "transactions": [
+    {
+      "player": "Wendell Carter Jr.",
+      "team": "Egormeister",
+      "valueSince": 5.1
+    },
+    {
+      "player": "Jaxson Hayes",
+      "team": "Mourning Glories ",
+      "valueSince": 4.5
+    },
+    {
+      "player": "Yves Missi",
+      "team": "Sweet Home Wembanyama",
+      "valueSince": 4.3
+    },
+    {
+      "player": "Jalen Smith",
+      "team": "Blox",
+      "valueSince": 2.8
+    },
+    {
+      "player": "Paul Reed",
+      "team": "Egormeister",
+      "valueSince": 2.3
+    },
+    {
+      "player": "Aaron Wiggins",
+      "team": "Blox",
+      "valueSince": 1.3
+    },
+    {
+      "player": "Obi Toppin",
+      "team": "To Serb and Protect",
+      "valueSince": 1.0
+    },
+    {
+      "player": "Anfernee Simons",
+      "team": "Blox",
+      "valueSince": 0
+    },
+    {
+      "player": "Neemias Queta",
+      "team": "To Serb and Protect",
+      "valueSince": -0.6
+    },
+    {
+      "player": "Isaiah Jackson",
+      "team": "High Fashion Haliburtons",
+      "valueSince": -0.8
+    }
+  ],
   "trades": [],
   "playerValues": {
     "Cooper Flagg": 4.56,
@@ -1142,5 +1193,5 @@
     "Mikel Brown Jr.": -4.2,
     "Bennedict Mathurin": -4.74
   },
-  "generatedAt": "2026-10-24T11:54:51.290952+00:00"
+  "generatedAt": "2026-10-24T21:33:35.001456+00:00"
 }
