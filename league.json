@@ -1161,11 +1161,6 @@
       "valueSince": 1.7
     },
     {
-      "player": "Obi Toppin",
-      "team": "To Serb and Protect",
-      "valueSince": 1.3
-    },
-    {
       "player": "Jay Huff",
       "team": "Dillon's Boozer Cam DUI Mugshot",
       "valueSince": 0.7
@@ -1193,6 +1188,11 @@
     {
       "player": "Trevon Brazile",
       "team": "The Missing Link ",
+      "valueSince": -1.0
+    },
+    {
+      "player": "Neemias Queta",
+      "team": "To Serb and Protect",
       "valueSince": -1.0
     }
   ],
@@ -1396,5 +1396,5 @@
     "Kyle Kuzma": -1.45,
     "Robert Williams III": -1.12
   },
-  "generatedAt": "2026-10-26T09:48:29.523362+00:00"
+  "generatedAt": "2026-10-26T14:02:00.180963+00:00"
 }
