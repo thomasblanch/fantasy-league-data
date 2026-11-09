@@ -1557,16 +1557,6 @@
       "valueSince": 0
     },
     {
-      "player": "Georges Niang",
-      "team": "KKKlay Thompson",
-      "valueSince": 0
-    },
-    {
-      "player": "Oso Ighodaro",
-      "team": "Egormeister",
-      "valueSince": 0
-    },
-    {
       "player": "Derrick Jones Jr.",
       "team": "Egormeister",
       "valueSince": -0.5
@@ -1590,6 +1580,16 @@
       "player": "Nolan Traore",
       "team": "Brad's Beasts",
       "valueSince": -1.3
+    },
+    {
+      "player": "Obi Toppin",
+      "team": "To Serb and Protect",
+      "valueSince": -1.5
+    },
+    {
+      "player": "Jamal Shead",
+      "team": "Dillon's Boozer Cam DUI Mugshot",
+      "valueSince": -2.6
     }
   ],
   "trades": [],
@@ -1795,5 +1795,5 @@
     "Kyle Kuzma": -2.84,
     "Robert Williams III": 0.81
   },
-  "generatedAt": "2026-11-09T09:20:04.939195+00:00"
+  "generatedAt": "2026-11-09T17:18:16.655079+00:00"
 }
