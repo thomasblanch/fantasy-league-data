@@ -2476,7 +2476,29 @@
       "valueSince": -3.0
     }
   ],
-  "trades": [],
+  "trades": [
+    {
+      "date": "2026-11-09T09:17:11.560000+00:00",
+      "teamA": "KKKlay Thompson",
+      "playersA": [
+        {
+          "name": "Matas Buzelis",
+          "ppg": -2.6,
+          "source": "real"
+        }
+      ],
+      "valueA": -2.6,
+      "teamB": "Egormeister",
+      "playersB": [
+        {
+          "name": "Day'Ron Sharpe",
+          "ppg": -0.2,
+          "source": "real"
+        }
+      ],
+      "valueB": -0.2
+    }
+  ],
   "playerValues": {
     "Cooper Flagg": 4.81,
     "Amen Thompson": 0.65,
@@ -2683,5 +2705,5 @@
     "Robert Williams III": 0.64,
     "Andre Drummond": -5.9
   },
-  "generatedAt": "2026-11-16T21:55:57.848411+00:00"
+  "generatedAt": "2026-11-16T22:04:13.270341+00:00"
 }
