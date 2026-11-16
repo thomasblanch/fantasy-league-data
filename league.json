@@ -114,7 +114,57 @@
             "TO": 0.06372641509433961
           }
         }
-      ]
+      ],
+      "injuries": {
+        "missed": 27,
+        "missedByInjured": 13,
+        "injuredNow": 4,
+        "unknown": 0,
+        "players": [
+          {
+            "name": "Jalen Duren",
+            "proTeam": "DET",
+            "status": "OUT",
+            "gp": 2,
+            "missed": 10
+          },
+          {
+            "name": "Egor Demin",
+            "proTeam": "BKN",
+            "status": "ACTIVE",
+            "gp": 6,
+            "missed": 6
+          },
+          {
+            "name": "Ivica Zubac",
+            "proTeam": "IND",
+            "status": "ACTIVE",
+            "gp": 9,
+            "missed": 5
+          },
+          {
+            "name": "Kyrie Irving",
+            "proTeam": "DAL",
+            "status": "DAY_TO_DAY",
+            "gp": 11,
+            "missed": 3
+          },
+          {
+            "name": "Moussa Diabate",
+            "proTeam": "CHA",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 2
+          },
+          {
+            "name": "Cooper Flagg",
+            "proTeam": "DAL",
+            "status": "ACTIVE",
+            "gp": 13,
+            "missed": 1
+          }
+        ]
+      }
     },
     {
       "id": 2,
@@ -227,7 +277,57 @@
             "TO": 0.07235955056179774
           }
         }
-      ]
+      ],
+      "injuries": {
+        "missed": 28,
+        "missedByInjured": 6,
+        "injuredNow": 3,
+        "unknown": 0,
+        "players": [
+          {
+            "name": "Keegan Murray",
+            "proTeam": "SAC",
+            "status": "ACTIVE",
+            "gp": 6,
+            "missed": 7
+          },
+          {
+            "name": "Patrick Williams",
+            "proTeam": "CHI",
+            "status": "ACTIVE",
+            "gp": 5,
+            "missed": 7
+          },
+          {
+            "name": "Andrew Nembhard",
+            "proTeam": "IND",
+            "status": "DAY_TO_DAY",
+            "gp": 11,
+            "missed": 3
+          },
+          {
+            "name": "Naji Marshall",
+            "proTeam": "DAL",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 3
+          },
+          {
+            "name": "Immanuel Quickley",
+            "proTeam": "TOR",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 2
+          },
+          {
+            "name": "Brandin Podziemski",
+            "proTeam": "GSW",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 2
+          }
+        ]
+      }
     },
     {
       "id": 3,
@@ -340,7 +440,57 @@
             "TO": 0.07490774907749076
           }
         }
-      ]
+      ],
+      "injuries": {
+        "missed": 19,
+        "missedByInjured": 10,
+        "injuredNow": 1,
+        "unknown": 0,
+        "players": [
+          {
+            "name": "Paolo Banchero",
+            "proTeam": "ORL",
+            "status": "OUT",
+            "gp": 2,
+            "missed": 10
+          },
+          {
+            "name": "Reed Sheppard",
+            "proTeam": "HOU",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 3
+          },
+          {
+            "name": "Anthony Davis",
+            "proTeam": "WAS",
+            "status": "ACTIVE",
+            "gp": 12,
+            "missed": 2
+          },
+          {
+            "name": "Paul George",
+            "proTeam": "BOS",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 2
+          },
+          {
+            "name": "Michael Porter Jr.",
+            "proTeam": "BKN",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 1
+          },
+          {
+            "name": "Klay Thompson",
+            "proTeam": "MIA",
+            "status": "ACTIVE",
+            "gp": 12,
+            "missed": 1
+          }
+        ]
+      }
     },
     {
       "id": 5,
@@ -453,7 +603,57 @@
             "TO": 0.05946104276508494
           }
         }
-      ]
+      ],
+      "injuries": {
+        "missed": 28,
+        "missedByInjured": 14,
+        "injuredNow": 2,
+        "unknown": 0,
+        "players": [
+          {
+            "name": "Chet Holmgren",
+            "proTeam": "OKC",
+            "status": "OUT",
+            "gp": 3,
+            "missed": 11
+          },
+          {
+            "name": "AJ Dybantsa",
+            "proTeam": "WAS",
+            "status": "ACTIVE",
+            "gp": 10,
+            "missed": 4
+          },
+          {
+            "name": "LeBron James",
+            "proTeam": "PHL",
+            "status": "OUT",
+            "gp": 11,
+            "missed": 3
+          },
+          {
+            "name": "Cameron Johnson",
+            "proTeam": "DEN",
+            "status": "ACTIVE",
+            "gp": 8,
+            "missed": 3
+          },
+          {
+            "name": "Luka Doncic",
+            "proTeam": "LAL",
+            "status": "ACTIVE",
+            "gp": 12,
+            "missed": 2
+          },
+          {
+            "name": "Jarrett Allen",
+            "proTeam": "CLE",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 2
+          }
+        ]
+      }
     },
     {
       "id": 6,
@@ -566,7 +766,50 @@
             "TO": 0.08654331370899916
           }
         }
-      ]
+      ],
+      "injuries": {
+        "missed": 19,
+        "missedByInjured": 1,
+        "injuredNow": 3,
+        "unknown": 1,
+        "players": [
+          {
+            "name": "Dylan Cardwell",
+            "proTeam": "SAC",
+            "status": "ACTIVE",
+            "gp": 6,
+            "missed": 7
+          },
+          {
+            "name": "Max Strus",
+            "proTeam": "LAC",
+            "status": "ACTIVE",
+            "gp": 6,
+            "missed": 6
+          },
+          {
+            "name": "Josh Hart",
+            "proTeam": "NYK",
+            "status": "ACTIVE",
+            "gp": 10,
+            "missed": 3
+          },
+          {
+            "name": "Alperen Sengun",
+            "proTeam": "HOU",
+            "status": "ACTIVE",
+            "gp": 12,
+            "missed": 2
+          },
+          {
+            "name": "Zach LaVine",
+            "proTeam": "SAC",
+            "status": "DAY_TO_DAY",
+            "gp": 12,
+            "missed": 1
+          }
+        ]
+      }
     },
     {
       "id": 7,
@@ -679,7 +922,57 @@
             "TO": 0.07537313432835821
           }
         }
-      ]
+      ],
+      "injuries": {
+        "missed": 37,
+        "missedByInjured": 14,
+        "injuredNow": 3,
+        "unknown": 0,
+        "players": [
+          {
+            "name": "Yves Missi",
+            "proTeam": "NOP",
+            "status": "ACTIVE",
+            "gp": 3,
+            "missed": 11
+          },
+          {
+            "name": "Ja Morant",
+            "proTeam": "POR",
+            "status": "OUT",
+            "gp": 4,
+            "missed": 8
+          },
+          {
+            "name": "Scottie Barnes",
+            "proTeam": "TOR",
+            "status": "ACTIVE",
+            "gp": 9,
+            "missed": 4
+          },
+          {
+            "name": "Stephen Curry",
+            "proTeam": "GSW",
+            "status": "OUT",
+            "gp": 10,
+            "missed": 3
+          },
+          {
+            "name": "Joel Embiid",
+            "proTeam": "PHL",
+            "status": "DAY_TO_DAY",
+            "gp": 11,
+            "missed": 3
+          },
+          {
+            "name": "LJ Cryer",
+            "proTeam": "GSW",
+            "status": "ACTIVE",
+            "gp": 10,
+            "missed": 3
+          }
+        ]
+      }
     },
     {
       "id": 8,
@@ -792,7 +1085,57 @@
             "TO": 0.0658889782783588
           }
         }
-      ]
+      ],
+      "injuries": {
+        "missed": 22,
+        "missedByInjured": 16,
+        "injuredNow": 5,
+        "unknown": 1,
+        "players": [
+          {
+            "name": "Tyrese Haliburton",
+            "proTeam": "IND",
+            "status": "OUT",
+            "gp": 4,
+            "missed": 10
+          },
+          {
+            "name": "Fred VanVleet",
+            "proTeam": "HOU",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 3
+          },
+          {
+            "name": "Isaiah Stewart",
+            "proTeam": "MEM",
+            "status": "OUT",
+            "gp": 10,
+            "missed": 3
+          },
+          {
+            "name": "Ziaire Williams",
+            "proTeam": "LAL",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 3
+          },
+          {
+            "name": "De'Andre Hunter",
+            "proTeam": "SAC",
+            "status": "DAY_TO_DAY",
+            "gp": 11,
+            "missed": 2
+          },
+          {
+            "name": "De'Aaron Fox",
+            "proTeam": "SAS",
+            "status": "DAY_TO_DAY",
+            "gp": 13,
+            "missed": 1
+          }
+        ]
+      }
     },
     {
       "id": 9,
@@ -905,7 +1248,57 @@
             "TO": 0.10677966101694913
           }
         }
-      ]
+      ],
+      "injuries": {
+        "missed": 27,
+        "missedByInjured": 6,
+        "injuredNow": 2,
+        "unknown": 0,
+        "players": [
+          {
+            "name": "Jalen Suggs",
+            "proTeam": "ORL",
+            "status": "ACTIVE",
+            "gp": 4,
+            "missed": 8
+          },
+          {
+            "name": "Trey Murphy III",
+            "proTeam": "NOP",
+            "status": "OUT",
+            "gp": 9,
+            "missed": 5
+          },
+          {
+            "name": "Danny Wolf",
+            "proTeam": "BKN",
+            "status": "ACTIVE",
+            "gp": 7,
+            "missed": 5
+          },
+          {
+            "name": "Jalen Johnson",
+            "proTeam": "ATL",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 3
+          },
+          {
+            "name": "Ajay Mitchell",
+            "proTeam": "OKC",
+            "status": "ACTIVE",
+            "gp": 12,
+            "missed": 2
+          },
+          {
+            "name": "Meleek Thomas",
+            "proTeam": "CLE",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 2
+          }
+        ]
+      }
     },
     {
       "id": 10,
@@ -1018,7 +1411,57 @@
             "TO": 0.0735216240070609
           }
         }
-      ]
+      ],
+      "injuries": {
+        "missed": 25,
+        "missedByInjured": 13,
+        "injuredNow": 4,
+        "unknown": 1,
+        "players": [
+          {
+            "name": "Jaren Jackson Jr.",
+            "proTeam": "UTA",
+            "status": "OUT",
+            "gp": 4,
+            "missed": 10
+          },
+          {
+            "name": "Coby White",
+            "proTeam": "CHA",
+            "status": "ACTIVE",
+            "gp": 6,
+            "missed": 7
+          },
+          {
+            "name": "Mo Bamba",
+            "proTeam": "UTA",
+            "status": "ACTIVE",
+            "gp": 10,
+            "missed": 4
+          },
+          {
+            "name": "Peyton Watson",
+            "proTeam": "CLE",
+            "status": "DAY_TO_DAY",
+            "gp": 11,
+            "missed": 2
+          },
+          {
+            "name": "Keyonte George",
+            "proTeam": "UTA",
+            "status": "ACTIVE",
+            "gp": 13,
+            "missed": 1
+          },
+          {
+            "name": "Jalen Smith",
+            "proTeam": "CHI",
+            "status": "DAY_TO_DAY",
+            "gp": 11,
+            "missed": 1
+          }
+        ]
+      }
     },
     {
       "id": 11,
@@ -1131,7 +1574,57 @@
             "TO": 0.02018604651162791
           }
         }
-      ]
+      ],
+      "injuries": {
+        "missed": 14,
+        "missedByInjured": 5,
+        "injuredNow": 1,
+        "unknown": 0,
+        "players": [
+          {
+            "name": "Dejounte Murray",
+            "proTeam": "NOP",
+            "status": "OUT",
+            "gp": 9,
+            "missed": 5
+          },
+          {
+            "name": "Brandon Miller",
+            "proTeam": "CHA",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 2
+          },
+          {
+            "name": "Rui Hachimura",
+            "proTeam": "LAC",
+            "status": "ACTIVE",
+            "gp": 10,
+            "missed": 2
+          },
+          {
+            "name": "Tristan da Silva",
+            "proTeam": "ORL",
+            "status": "ACTIVE",
+            "gp": 10,
+            "missed": 2
+          },
+          {
+            "name": "Domantas Sabonis",
+            "proTeam": "SAC",
+            "status": "ACTIVE",
+            "gp": 12,
+            "missed": 1
+          },
+          {
+            "name": "Pascal Siakam",
+            "proTeam": "IND",
+            "status": "ACTIVE",
+            "gp": 13,
+            "missed": 1
+          }
+        ]
+      }
     },
     {
       "id": 12,
@@ -1244,7 +1737,57 @@
             "TO": 0.08037037037037037
           }
         }
-      ]
+      ],
+      "injuries": {
+        "missed": 14,
+        "missedByInjured": 7,
+        "injuredNow": 3,
+        "unknown": 0,
+        "players": [
+          {
+            "name": "Zach Edey",
+            "proTeam": "MEM",
+            "status": "DAY_TO_DAY",
+            "gp": 10,
+            "missed": 3
+          },
+          {
+            "name": "Anthony Black",
+            "proTeam": "ORL",
+            "status": "ACTIVE",
+            "gp": 9,
+            "missed": 3
+          },
+          {
+            "name": "Austin Reaves",
+            "proTeam": "LAL",
+            "status": "DAY_TO_DAY",
+            "gp": 12,
+            "missed": 2
+          },
+          {
+            "name": "Ty Jerome",
+            "proTeam": "MEM",
+            "status": "OUT",
+            "gp": 11,
+            "missed": 2
+          },
+          {
+            "name": "Draymond Green",
+            "proTeam": "GSW",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 2
+          },
+          {
+            "name": "Jaylen Brown",
+            "proTeam": "PHL",
+            "status": "ACTIVE",
+            "gp": 13,
+            "missed": 1
+          }
+        ]
+      }
     },
     {
       "id": 13,
@@ -1357,7 +1900,50 @@
             "TO": 0.07618006993006994
           }
         }
-      ]
+      ],
+      "injuries": {
+        "missed": 14,
+        "missedByInjured": 8,
+        "injuredNow": 3,
+        "unknown": 1,
+        "players": [
+          {
+            "name": "Lauri Markkanen",
+            "proTeam": "UTA",
+            "status": "OUT",
+            "gp": 8,
+            "missed": 6
+          },
+          {
+            "name": "Alex Caruso",
+            "proTeam": "OKC",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 3
+          },
+          {
+            "name": "Devin Vassell",
+            "proTeam": "SAS",
+            "status": "ACTIVE",
+            "gp": 12,
+            "missed": 2
+          },
+          {
+            "name": "Jaxson Hayes",
+            "proTeam": "UTA",
+            "status": "DAY_TO_DAY",
+            "gp": 12,
+            "missed": 2
+          },
+          {
+            "name": "Rudy Gobert",
+            "proTeam": "MIN",
+            "status": "ACTIVE",
+            "gp": 12,
+            "missed": 1
+          }
+        ]
+      }
     },
     {
       "id": 14,
@@ -1470,7 +2056,57 @@
             "TO": 0.062233285917496446
           }
         }
-      ]
+      ],
+      "injuries": {
+        "missed": 45,
+        "missedByInjured": 34,
+        "injuredNow": 6,
+        "unknown": 1,
+        "players": [
+          {
+            "name": "Kon Knueppel",
+            "proTeam": "CHA",
+            "status": "OUT",
+            "gp": 1,
+            "missed": 12
+          },
+          {
+            "name": "Kawhi Leonard",
+            "proTeam": "TOR",
+            "status": "OUT",
+            "gp": 2,
+            "missed": 11
+          },
+          {
+            "name": "Anthony Edwards",
+            "proTeam": "MIN",
+            "status": "OUT",
+            "gp": 4,
+            "missed": 9
+          },
+          {
+            "name": "Nic Claxton",
+            "proTeam": "CHI",
+            "status": "ACTIVE",
+            "gp": 3,
+            "missed": 9
+          },
+          {
+            "name": "Precious Achiuwa",
+            "proTeam": "SAC",
+            "status": "DAY_TO_DAY",
+            "gp": 11,
+            "missed": 2
+          },
+          {
+            "name": "VJ Edgecombe",
+            "proTeam": "PHL",
+            "status": "ACTIVE",
+            "gp": 13,
+            "missed": 1
+          }
+        ]
+      }
     },
     {
       "id": 15,
@@ -1583,7 +2219,57 @@
             "TO": 0.0937365010799136
           }
         }
-      ]
+      ],
+      "injuries": {
+        "missed": 11,
+        "missedByInjured": 2,
+        "injuredNow": 2,
+        "unknown": 1,
+        "players": [
+          {
+            "name": "Caleb Wilson",
+            "proTeam": "CHI",
+            "status": "OUT",
+            "gp": 10,
+            "missed": 2
+          },
+          {
+            "name": "Norman Powell",
+            "proTeam": "CHI",
+            "status": "ACTIVE",
+            "gp": 10,
+            "missed": 2
+          },
+          {
+            "name": "Jakob Poeltl",
+            "proTeam": "TOR",
+            "status": "ACTIVE",
+            "gp": 11,
+            "missed": 2
+          },
+          {
+            "name": "Robert Williams III",
+            "proTeam": "POR",
+            "status": "ACTIVE",
+            "gp": 10,
+            "missed": 2
+          },
+          {
+            "name": "Jayson Tatum",
+            "proTeam": "BOS",
+            "status": "ACTIVE",
+            "gp": 12,
+            "missed": 1
+          },
+          {
+            "name": "Zion Williamson",
+            "proTeam": "NOP",
+            "status": "ACTIVE",
+            "gp": 13,
+            "missed": 1
+          }
+        ]
+      }
     }
   ],
   "schedule": [
@@ -1997,5 +2683,5 @@
     "Robert Williams III": 0.64,
     "Andre Drummond": -5.9
   },
-  "generatedAt": "2026-11-16T21:51:37.265216+00:00"
+  "generatedAt": "2026-11-16T21:55:57.848411+00:00"
 }
